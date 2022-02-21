@@ -1,4 +1,4 @@
-class TodoNext::CLI
+class Cli
 
 	def call
 	#   WorldsBestRestaurants::Scraper.new.make_restaurants

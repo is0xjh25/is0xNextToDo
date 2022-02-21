@@ -1,10 +1,10 @@
-require 'pry'
-require 'nokogiri'
-require 'open-uri'
-require 'net/http'
-require 'json'
+require 'bundler/setup'
+Bundler.require
 
-require_relative '../lib/cli'
-# require_relative '../lib/worlds_best_restaurants/restaurant'
-# require_relative '../lib/worlds_best_restaurants/cli'
-# require_relative '../lib/worlds_best_restaurants/version'
+# put the code to connect to the database here
+ActiveRecord::Base.establish_connection(
+  :adapter => "sqlite3",
+  :database => "db/app.sqlite"
+)
+
+require_relative "../lib/user.rb"
