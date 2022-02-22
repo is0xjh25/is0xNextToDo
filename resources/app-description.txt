@@ -1,0 +1,6 @@
+This application can help users to decide 
+what are they going to do next while they 
+are bored. The program is controlled by 
+command line input. It supports personal 
+account and saving information via using 
+SQLite.
