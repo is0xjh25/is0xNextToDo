@@ -296,11 +296,11 @@ class Cli
 		opts_arr = ["1", "2", "3", "4", "5", "6", "7", "8"]
 		type = offer_options(question, opts, opts_arr)
 
-		puts "[is0]: Accessibility? (Easy->Hard = 0->10)" + GAP
+		puts "[is0]: Accessibility? (Easy->Hard = 0->1)" + GAP
 		accessibility = puts_promot
-		puts "[is0]: Price? (Free->Paid = 0->10)" + GAP
+		puts "[is0]: Price? (Free->Paid = 0->1)" + GAP
 		price = puts_promot
-		puts "[is0]: Participants? (0->10)" + GAP
+		puts "[is0]: Participants? (0->N)" + GAP
 		participants = puts_promot
 	end
 
