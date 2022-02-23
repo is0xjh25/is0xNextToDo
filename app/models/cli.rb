@@ -15,41 +15,6 @@ class Cli
 		setup
 	end
 
-	# Helper Functions
-	def puts_options(text)
-		print VER
-		text.each_char {|char| print HOR}
-		print VER
-		puts
-		puts VER + text + VER
-		print VER
-		text.each_char {|char| print HOR}
-		print VER
-		puts
-		puts
-	end
-
-	def puts_promot
-		print "[#{@username}]: "
-		input = gets.strip.downcase
-		puts
-		input
-	end
-
-	def offer_options(question, opts, opts_arr)
-		
-		puts question
-		self.puts_options(opts) 
-		selected = self.puts_promot
-
-		while !opts_arr.include? selected 
-			puts START_INDICATION + "Please enter a valid number!" + GAP
-			selected = self.puts_promot
-		end
-
-		selected
-	end
-
 	# start the CLI
 	def call
 		puts START_SECTION
@@ -64,7 +29,15 @@ class Cli
 		puts "I guess you are bored now." + GAP 
 		puts "Let's get some FUN!" + GAP
 		puts END_SECTION
-		self.start
+		start
+	end
+
+	private
+
+	def setup
+		@username = INITIAL_USER
+		@home_page_visited = false
+		@login_failed = false
 	end
 
 	def start
@@ -75,14 +48,14 @@ class Cli
 		question = START_INDICATION + "What's your next move?" + GAP
 		opts = " [1]Start [2]Leave "
 		opts_arr = ["1", "2"]
-		selected = self.offer_options(question, opts, opts_arr)
+		selected = offer_options(question, opts, opts_arr)
 
 		
 		if selected == "1"
-			self.login
+			login
 		elsif selected == "2"
 			puts END_SECTION
-			self.leave
+			leave
 		else
 		  	puts "ERROR!!!"
 		end
@@ -95,17 +68,17 @@ class Cli
 		question = START_INDICATION + "Do you have an account already?" + GAP
 		opts = " [1]Got one [2]Create account [3]Login as guest "
 		opts_arr = ["1", "2", "3"]
-		selected = self.offer_options(question, opts, opts_arr)
+		selected = offer_options(question, opts, opts_arr)
 
 		if selected == "1"
-			self.login_member
+			login_member
 		elsif selected == "2"
 			puts END_SECTION
-			self.login_create_user
+			login_create_user
 		elsif selected == "3"
 			puts END_SECTION
 			@username = "Guest"
-		  	self.home_page
+		  	home_page
 		else
 		  	puts "ERROR!!!"
 		end
@@ -118,39 +91,39 @@ class Cli
 		question = START_INDICATION + "Give me some information about you." + GAP
 		opts = " [1]Username [2]Email "
 		opts_arr = ["1", "2"]
-		selected = self.offer_options(question, opts, opts_arr)
+		selected = offer_options(question, opts, opts_arr)
 
 		puts START_INDICATION + "I'm listening."+ GAP
-		reply = self.puts_promot
+		reply = puts_promot
 
 		if selected == "1" && reply == "qwe"
 			puts START_INDICATION + "Found it!" + GAP
 			puts START_INDICATION + "Here is your account information." + GAP
 			puts START_INDICATION + "Don't lose it :)" + GAP
 			puts END_SECTION
-			self.quit
+			quit
 		elsif selected == "2" && reply == "qwe@gmail.com"
 			puts START_INDICATION + "Found it!" + GAP
 			puts START_INDICATION + "Here is your account information." + GAP
 			puts START_INDICATION + "Don't lose it :)" + GAP
 			puts END_SECTION
-			self.quit
+			quit
 		else
 			puts START_INDICATION + "Sorry, I don't see you in the database" + GAP
 			question_1 = START_INDICATION + "Should we move on?" + GAP
 			opts_1 = " [1]Call for help [2]Create account [3]Login as guest "
 			opts_arr_1 = ["1", "2", "3"]
-			selected_1 = self.offer_options(question_1, opts_1, opts_arr_1)
+			selected_1 = offer_options(question_1, opts_1, opts_arr_1)
 
 			if selected_1 == "1"
-				self.login_rescue
+				login_rescue
 			elsif selected_1 == "2"
 				puts END_SECTION
-				self.login_create_user
+				login_create_user
 			elsif selected_1 == "3"
 				puts END_SECTION
 				@username = "Guest"
-				self.home_page
+				home_page
 			else
 				puts "ERROR!!!"
 			end
@@ -162,18 +135,18 @@ class Cli
 		puts START_SECTION
 		puts START_INDICATION + "is0xNextToDo welcomes you!" + GAP
 		puts START_INDICATION + "Enter your new username." + GAP
-		username = self.puts_promot
+		username = puts_promot
 
 		while username == "asd"
 			puts START_INDICATION + "Sorry, the username has been used." + GAP
 			puts START_INDICATION + "Pick another one." + GAP
-			username = self.puts_promot
+			username = puts_promot
 		end
 
 		email_validate = false
 		puts START_INDICATION + "Enter your email." + GAP
 		while !email_validate
-			email = self.puts_promot
+			email = puts_promot
 
 			if !is_valid_email?email
 				puts START_INDICATION + "The email is not valid. Please check it again." + GAP
@@ -221,7 +194,7 @@ class Cli
 			puts START_INDICATION + "Your username, please." + GAP
 		end
 
-		username = self.puts_promot
+		username = puts_promot
 		puts START_INDICATION + "And password. Don't worry, I won't tell anyone :)" + GAP
 		print "[#{@username}]: "
 		password = STDIN.noecho(&:gets).chomp
@@ -231,7 +204,7 @@ class Cli
 			@username = "Yun-Chi"
 			@login_failed = false
 			puts END_SECTION
-			self.home_page
+			home_page
 		else
 			@login_failed = true
 			puts START_INDICATION + "Seems like your username or password is wrong" + GAP
@@ -240,16 +213,16 @@ class Cli
 			question = START_INDICATION + "Pick one." + GAP
 			opts = " [1]Try again [2]Need a rescue team [3]Login as guest "
 			opts_arr = ["1", "2", "3"]
-			selected = self.offer_options(question, opts, opts_arr)
+			selected = offer_options(question, opts, opts_arr)
 
 			if selected == "1"
-				self.login_member
+				login_member
 			elsif selected == "2"
-				self.login_rescue
+				login_rescue
 			elsif selected == "3"
 				@username = "Guest"
 				puts END_SECTION
-				self.home_page
+				home_page
 			else
 				puts "ERROR!!!"
 			end
@@ -270,18 +243,18 @@ class Cli
 
 		opts = " [1]Surprise [2]Advanced [3]Collection [4]Quit "
 		opts_arr = ["1", "2", "3", "4"]
-		selected = self.offer_options(question, opts, opts_arr)
+		selected = offer_options(question, opts, opts_arr)
 
 		puts END_SECTION
 
 		if selected == "1"
-			self.surprise
+			surprise
 		elsif selected == "2"
-			self.advanced
+			advanced
 		elsif selected == "3"
-			self.collection
+			collection
 		elsif selected == "4"
-			self.quit
+			quit
 		else
 			puts "ERROR!!!"
 		end
@@ -296,18 +269,18 @@ class Cli
 		question =  START_INDICATION + "Here you go! What to do next?" + GAP
 		opts = " [1]Next [2]Save it [3]Home "
 		opts_arr = ["1", "2", "3"]
-		selected = self.offer_options(question, opts, opts_arr)
+		selected = offer_options(question, opts, opts_arr)
 	
 		if selected == "1"
 			puts END_SECTION
-			self.surprise
+			surprise
 		elsif selected == "2"
 			puts START_INDICATION + "It's has been save to your collection"
 			puts END_SECTION
-			self.home_page
+			home_page
 		elsif selected == "3"
 			puts END_SECTION
-			self.home_page
+			home_page
 		else 
 			puts "Error!!!"
 		end
@@ -321,14 +294,14 @@ class Cli
 		question = "Type?"
 		opts = " [1]Education [2]Recreational [3]Social [4]Charity [5]Cooking [6]Relaxation [7]Music [8]Busywork "
 		opts_arr = ["1", "2", "3", "4", "5", "6", "7", "8"]
-		type = self.offer_options(question, opts, opts_arr)
+		type = offer_options(question, opts, opts_arr)
 
 		puts "[is0]: Accessibility? (Easy->Hard = 0->10)" + GAP
-		accessibility = self.puts_promot
+		accessibility = puts_promot
 		puts "[is0]: Price? (Free->Paid = 0->10)" + GAP
-		price = self.puts_promot
+		price = puts_promot
 		puts "[is0]: Participants? (0->10)" + GAP
-		participants = self.puts_promot
+		participants = puts_promot
 	end
 
 	def collection
@@ -336,7 +309,7 @@ class Cli
 
 	def quit
 		setup
-		self.start
+		start
 	end
 
 	def leave
@@ -347,12 +320,39 @@ class Cli
 		exit
 	end
 
-	private
+	# Helper Functions
+	def puts_options(text)
+		print VER
+		text.each_char {|char| print HOR}
+		print VER
+		puts
+		puts VER + text + VER
+		print VER
+		text.each_char {|char| print HOR}
+		print VER
+		puts
+		puts
+	end
 
-	def setup
-		@username = INITIAL_USER
-		@home_page_visited = false
-		@login_failed = false
+	def puts_promot
+		print "[#{@username}]: "
+		input = gets.strip.downcase
+		puts
+		input
+	end
+
+	def offer_options(question, opts, opts_arr)
+		
+		puts question
+		puts_options(opts) 
+		selected = puts_promot
+
+		while !opts_arr.include? selected 
+			puts START_INDICATION + "Please enter a valid number!" + GAP
+			selected = puts_promot
+		end
+
+		selected
 	end
 
 	def is_valid_email?(email)
