@@ -13,7 +13,6 @@ module CLI
 		
 		str
 	end
-	module_function :make_title
 	
 	# support reading sinlge input and control-c command
 	def get_char
@@ -23,7 +22,6 @@ module CLI
 		ensure
 		`stty #{state}`
 	end
-	module_function :get_char
 
 	def puts_options(options)
 				
@@ -35,19 +33,19 @@ module CLI
 			options.each do |key, info|
 				label = info[:label]
 				# 1  WhiteSpace + [1] + 1 WhiteSpace + START + the rest of gap
-				overall_length = 4 + key.size + label.size
+				overall_length = 3 + key.size + label.size
 				if option_length >= overall_length
-					line += WHITE_SPACE + "[#{key.upcase}]" + WHITE_SPACE + "#{label}" + WHITE_SPACE * (option_length - overall_length + 1)
+					line += "[#{key.upcase}]" + "#{label}" + WHITE_SPACE * (option_length - overall_length + 1)
 				else
 					begin
 						raise CliError
 					rescue CliError => error
-						puts error.option_size
+						puts error.option_too_long
 					end
 				end  
 			end
 		elsif options.size == 8
-		# 
+			
 		else
 			begin
 				raise CliError
@@ -62,7 +60,6 @@ module CLI
 		puts HOR * DIVIDER_LENGTH
 		puts
 	end
-	module_function :puts_options
 
 	def make_options(question, options)
 		
@@ -85,9 +82,12 @@ module CLI
 			warning_count += 1
 		end
 
-		self.send(options[input][:method])
+		if options[input][:method]
+			self.send(options[input][:method])
+		else
+			input
+		end
 	end
-	module_function :make_options
 
 	def puts_short_promot
 		print "[#{CLI::username}]: "
@@ -95,18 +95,17 @@ module CLI
 		print input + GAP_LINE
 		input
 	end
-	module_function :puts_short_promot
 
 	def puts_long_promot
-		print "[#{CLI.username}]: "
-		input = get_strip.downcase
-		print input + GAP_LINE
+		print "[#{CLI::username}]: "
+		input = gets.strip.downcase
+		puts
 		input
 	end
-	module_function :puts_long_promot
 
 	def valid_email?(email)
 		email =~ /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 	end
-	module_function :valid_email?
+
+	module_function :make_title, :get_char, :puts_options, :make_options, :puts_short_promot, :puts_long_promot, :valid_email?
 end

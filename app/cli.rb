@@ -20,6 +20,7 @@ module CLI
 	BACK = "b"
 	MAX_INPUT_ATTEMPT = 10
 	MAX_LOGIN_ATTEMPT = 5
+	MAX_RESCUE_ATTEMPT = 5
 
 	# Setters and Getters
 	def self.username=(value)
@@ -28,14 +29,6 @@ module CLI
 
 	def self.username
 		@@username
-	end
-
-	def self.menu_visited=(value)
-		@@menu_visited = value
-	end
-
-	def self.menu_visited
-		@@menu_visited
 	end
 
 	def self.login_failed=(value)
@@ -47,11 +40,19 @@ module CLI
 	end
 
 	def self.login_attempt=(value)
-		@@login_failed = value
+		@@login_attempt = value
 	end
 
 	def self.login_attempt
-		@@login_failed
+		@@login_attempt
+	end
+
+	def self.rescue_attempt=(value)
+		@@rescue_attempt = value
+	end
+
+	def self.rescue_attempt
+		@@rescue_attempt
 	end
 
 	# Entry
@@ -90,12 +91,17 @@ module CLI
 
 		def excessive_warning
 			puts START_ERROR + "Retard Alert!!!" + GAP_LINE
-			puts START_ERROR + "The program is shutting down for security reasons." + GAP_LINE
+			puts START_ERROR + "The program is shutting down for security reasons."
 		end
 
 		def excessive_login_attempt
 			puts START_ERROR + "Just take a rest!!!" + GAP_LINE
-			puts START_ERROR + "The program is shutting down for security reasons." + GAP_LINE
+			puts START_ERROR + "The program is shutting down for security reasons."
+		end
+
+		def excessive_rescue_attempt
+			puts START_ERROR + "Don't try to hack!!!" + GAP_LINE
+			puts START_ERROR + "The program is shutting down for security reasons."
 		end
 
 		def options_overload
