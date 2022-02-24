@@ -2,4 +2,4 @@
 
 require_relative '../config/environment.rb'
 
-Cli.new.call
+CLI::Cli.new.call

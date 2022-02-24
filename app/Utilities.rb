@@ -31,20 +31,20 @@ module Utilities
 		end
 	end
 
-	module FormatData
+	# module FormatData
 		
-		def self.puts_account_info(info)
-		end
+	# 	def self.puts_account_info(info)
+	# 	end
 
-		def self.puts_activity(info)
-		end
+	# 	def self.puts_activity(info)
+	# 	end
 
-		def self.puts_collection_list(info)
-		end
+	# 	def self.puts_collection_list(info)
+	# 	end
 
-		def self.puts_collection(info)
-		end
-	end
+	# 	def self.puts_collection(info)
+	# 	end
+	# end
 end
 
 
