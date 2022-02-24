@@ -1,4 +1,4 @@
-	Hakuna matata  Olá  Ahoj  Hello  안녕하세요
-	你好  Hallå  Xin Chào  Hola  Salut  Servus 
-	Χαίρετε  أهلا  Merhaba  Apa kabar  Kamusta
-	Привет  Aloha  Hei  今日は  cześć  Bonjour
+	 Hakuna matata  Olá  Ahoj  Hello  안녕하세요
+	 你好  Hallå  Xin Chào  Hola  Salut  Servus 
+	 Χαίρετε  أهلا  Merhaba  Apa kabar  Kamusta
+	 Привет  Aloha  Hei  今日は  cześć  Bonjour
