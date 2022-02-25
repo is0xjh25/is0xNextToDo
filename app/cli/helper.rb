@@ -11,7 +11,7 @@ module CLI
 			str += text + EMPHASIZE_SYMBOL_E + DIVIDER_SYMBOL * symbol_length
 		end
 		
-		str
+		return str
 	end
 	
 	# support reading sinlge input and control-c command
@@ -96,7 +96,7 @@ module CLI
 				self.send(opt[input][:method])
 			end
 		else
-			input
+			return input
 		end
 	end
 
@@ -104,18 +104,18 @@ module CLI
 		print "[#{CLI::username}]: "
 		input = get_char.downcase
 		print input + GAP_LINE
-		input
+		return input
 	end
 
 	def puts_long_promot
 		print "[#{CLI::username}]: "
 		input = gets.strip.downcase
 		puts
-		input
+		return input
 	end
 
 	def valid_email?(email)
-		email =~ /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+		return email =~ /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 	end
 
 	module_function :make_title, :get_char, :puts_options, :make_options, :puts_short_promot, :puts_long_promot, :valid_email?

@@ -108,15 +108,15 @@ module CLI
 		end
 
 		def options_overload
-			START_ERROR + "Invalid number of options. Only accept 2, 3, 4, 6, 7, 8."
+			puts START_ERROR + "Invalid number of options. Only accept 2, 3, 4, 6, 7, 8."
 		end
 
 		def option_too_long
-			START_ERROR + "Text for option needs to be shorten."
+			puts START_ERROR + "Text for option needs to be shorten."
 		end
 
 		def invalid_argument
-			START_ERROR + "Invalid argument."
+			puts START_ERROR + "Invalid argument."
 		end
 	end
 end

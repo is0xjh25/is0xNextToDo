@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require_relative '../config/environment.rb'
+
+puts ApiHelper::get_random
+puts ApiHelper::get_advanced(opt: "price", val: "0.9")

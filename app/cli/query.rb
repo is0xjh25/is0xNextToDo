@@ -97,7 +97,7 @@ module CLI
 		# show data
 		# handle no data
 		CLI::puts_activity()
-		CLI::handle_query(user: "member", type: "advanced", user: user)
+		CLI::handle_query(user: "member", type: "advanced")
 	end
 
 	def puts_activity()
