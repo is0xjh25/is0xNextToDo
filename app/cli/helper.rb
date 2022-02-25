@@ -44,8 +44,21 @@ module CLI
 					end
 				end  
 			end
-		elsif options.size == 8
-			
+
+			# option box
+			puts HOR * DIVIDER_LENGTH
+			puts line
+			puts HOR * DIVIDER_LENGTH
+			puts
+		elsif [6, 7, 8].include? options.size
+			split_options = options.dup
+			split_options_1 = {}
+			(options.size / 2).times do
+				key, value = split_options.shift
+				split_options_1.merge!("#{key}" => value)
+			end
+			CLI::puts_options(split_options_1)
+			CLI::puts_options(split_options)
 		else
 			begin
 				raise CliError
@@ -53,19 +66,13 @@ module CLI
 				puts error.options_overload
 			end
 		end
-
-		# option box
-		puts HOR * DIVIDER_LENGTH
-		puts line
-		puts HOR * DIVIDER_LENGTH
-		puts
 	end
 
 	def make_options(question, options)
 		
 		warning_count = 0
 		puts question
-		puts_options(options) 
+		puts_options(options)
 		input = puts_short_promot
 
 		while !options.has_key?(input)

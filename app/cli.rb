@@ -17,7 +17,9 @@ module CLI
 	QUIT = "q"
 	MENU = "m"
 	HOME = "h"
-	BACK = "b"
+	SAVE = "s"
+	NEXT = "n"
+	RESET = "r"
 	MAX_INPUT_ATTEMPT = 10
 	MAX_LOGIN_ATTEMPT = 5
 	MAX_RESCUE_ATTEMPT = 5
@@ -70,10 +72,9 @@ module CLI
 			puts
 			puts File.readlines('./resources/hello.txt') 
 			puts GAP_LINE
-			print CLI::make_title("Developed by is0xjh25")
+			print "======Developed by is0xjh25 X Supported by Bored-API======"
 			
 			input = CLI::get_char
-
 			if input != "q"
 				puts GAP_LINE
 				puts File.readlines('./resources/app-description.txt')
@@ -105,11 +106,15 @@ module CLI
 		end
 
 		def options_overload
-			START_ERROR + "Invalid number of options. Only accept 2, 3, 4, 8."
+			START_ERROR + "Invalid number of options. Only accept 2, 3, 4, 6, 7, 8."
 		end
 
 		def option_too_long
 			START_ERROR + "Text for option needs to be shorten."
+		end
+
+		def invalid_argument
+			START_ERROR + "Invalid argument."
 		end
 	end
 end

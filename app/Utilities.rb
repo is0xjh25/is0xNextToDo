@@ -4,13 +4,13 @@ module Utilities
 		
 		URL = "http://www.boredapi.com/api/activity"
 		
-		def self.get_random
+		def get_random
 			uri = URI.parse(URL)
 			response = Net::HTTP.get_response(uri)
 			JSON.parse(response.body)
 		end
 
-		def self.get_advanced(opt:, val:)
+		def get_advanced(opt:, val:)
 			opts = ["type", "accessibility", "price", "participant"]
 			if opts.include? opt
 				url = URL + "?#{opt}=#{val}"
@@ -23,12 +23,14 @@ module Utilities
 			JSON.parse(response.body)
 		end
 
-		def self.get_activity(key)
+		def get_activity(key)
 			url = URL + "?key=#{key}"
 			uri = URI.parse(url)
 			response = Net::HTTP.get_response(uri)
 			JSON.parse(response.body)
 		end
+		
+		module_function :get_random, :get_advanced, :get_activity
 	end
 
 	# module FormatData
@@ -45,6 +47,7 @@ module Utilities
 	# 	def self.puts_collection(info)
 	# 	end
 	# end
+	
 end
 
 
