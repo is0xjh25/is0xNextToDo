@@ -56,13 +56,14 @@ module CLI
 	end
 
 	def quit
+		
 		puts CLI::make_title("See You Next Time")
 		puts GAP_LINE
 		puts File.readlines('./resources/favicon.txt')
 		puts
 		puts File.readlines('./resources/bye.txt') 
 		puts GAP_LINE
-		print "======Developed by is0xjh25 X Supported by Bored-API======"
+		print COPY_RIGHT
 
 		input = CLI::get_char
 		exit

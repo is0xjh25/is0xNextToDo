@@ -3,11 +3,13 @@ module CLI
 	# Static Variables
 	INITIAL_USER = "Guest"
 	GAP_LINE = "\n\n"
+	BORDER = "-"
 	VER = "|"
 	HOR = "~"
 	DIVIDER_LENGTH = 60
 	DIVIDER_SYMBOL = "="
 	DIVIDER = "============================================================"
+	COPY_RIGHT = "======Developed by is0xjh25 X Supported by Bored-API======"
 	EMPHASIZE_SYMBOL_F = "<<< "
 	EMPHASIZE_SYMBOL_E = " >>>"
 	START = "[is0]: " 
@@ -72,7 +74,7 @@ module CLI
 			puts
 			puts File.readlines('./resources/hello.txt') 
 			puts GAP_LINE
-			print "======Developed by is0xjh25 X Supported by Bored-API======"
+			print COPY_RIGHT
 			
 			input = CLI::get_char
 			if input != "q"

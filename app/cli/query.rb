@@ -45,7 +45,7 @@ module CLI
 		puts CLI::make_title("Surprise") + GAP_LINE
 		# show data
 		# handle no data
-		puts "COOOOOOOOOOOOOL" + GAP_LINE
+		CLI::puts_activity()
 
 		if user == "guest" || user == "member"
 			CLI::handle_query(user: user, type: "surprise")
@@ -100,5 +100,27 @@ module CLI
 		CLI::handle_query(user: "member", type: "advanced", user: user)
 	end
 
-	module_function :handle_query, :surprise, :advanced
+	def puts_activity()
+		
+		# example
+		eg = {
+			"activity": "Learn a new programming language",
+			"accessibility": 0.25,
+			"type": "education",
+			"participants": 1,
+			"price": 0.1,
+			"key": "5881028"
+		}
+
+		col_name = ["activity", "type", "participants", "accessibility", "price"]
+		col_max_length = col_name.max_by(&:length).size + 2
+
+		col_name.each do |e|
+			puts BORDER * col_max_length
+			puts VER + "#{e.capitalize}" + WHITE_SPACE * (col_max_length - e.size - 2) + VER + WHITE_SPACE + eg[:"#{e}"].to_s.capitalize
+		end
+		puts BORDER * col_max_length + GAP_LINE
+	end
+
+	module_function :handle_query, :surprise, :advanced, :puts_activity
 end
