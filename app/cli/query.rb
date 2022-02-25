@@ -6,27 +6,27 @@ module CLI
 
 		if user == "member" && type == "surprise"
 			options = {
-				NEXT => {label: "NEXT", method: "surprise"},
+				NEXT => {label: "NEXT", method: "surprise", argument: user},
 				SAVE => {label: "SAVE", method: ""},
-				HOME => {label: "HOME", method: "home"},
+				HOME => {label: "HOME", method: "home", argument: user},
 			}
 		elsif user == "guest" && type == "surprise"
 			options = {
-				NEXT=> {label: "NEXT", method: "surprise"},
-				HOME => {label: "HOME", method: "home_guest"},
+				NEXT=> {label: "NEXT", method: "surprise", argument: user},
+				HOME => {label: "HOME", method: "home", argument: user},
 			}
 		elsif user == "member" && type == "advanced"
 			options = {
 				NEXT => {label: "NEXT", method: ""},
 				SAVE => {label: "SAVE", method: ""},
-				RESET => {label: "RESET", method: "advanced"},
-				HOME => {label: "HOME", method: "home"},
+				RESET => {label: "RESET", method: "advanced", argument: user},
+				HOME => {label: "HOME", method: "home", argument: user},
 			}
 		elsif user == "guest" && type == "advanced"
 			options = {
 				NEXT => {label: "NEXT", method: ""},
-				RESET => {label: "RESET", method: "advanced"},
-				HOME => {label: "HOME", method: "home_guest"},
+				RESET => {label: "RESET", method: "advanced", argument: user},
+				HOME => {label: "HOME", method: "home", argument: user},
 			}
 		else
 			begin
@@ -36,29 +36,29 @@ module CLI
 			end
 		end
 
-		CLI::make_options(question, options)
+		CLI::make_options(question: question, opt: options)
 	end
 
 	
-	def surprise
+	def surprise(user)
 
 		puts CLI::make_title("Surprise") + GAP_LINE
 		# show data
 		# handle no data
 		puts "COOOOOOOOOOOOOL" + GAP_LINE
-		CLI::handle_query(user: "member", type: "surprise")
+
+		if user == "guest" || user == "member"
+			CLI::handle_query(user: user, type: "surprise")
+		else
+			begin
+				raise CliError
+			rescue CliError => error
+				puts error.invalid_argument
+			end
+		end
 	end
 
-	def surprise_guest
-
-		puts CLI::make_title("Surprise") + GAP_LINE
-		# show data
-		# handle no data
-		puts "COOOOOOOOOOOOOL" + GAP_LINE
-		CLI::handle_query(user: "guest", type: "surprise")
-	end
-
-	def advanced
+	def advanced(user)
 		
 		puts CLI::make_title("Advanced") + GAP_LINE
 		question =  START + "Choose a filter." + GAP_LINE	
@@ -68,7 +68,7 @@ module CLI
 			"3" => {label: "ACCESSLEVEL", method: nil},
 			"4" => {label: "PARTICIPANT", method: nil},
 		}
-		filter = CLI::make_options(question, options)
+		filter = CLI::make_options(question: question, opt: options)
 		
 		if filter == "1"
 			question = START + "Choose a type." + GAP_LINE	
@@ -82,7 +82,7 @@ module CLI
 				"7" => {label: "MUSIC", method: nil},
 				"8" => {label: "BUYSWORK", method: nil},
 			}
-			selected = CLI::make_options(question, options)
+			selected = CLI::make_options(question: question, opt: options)
 		elsif filter == "2"
 			puts "[is0]: Price? (Free->Paid = 0->1)" + GAP_LINE
 			selected  = puts_long_promot
@@ -96,49 +96,9 @@ module CLI
 
 		# show data
 		# handle no data
-
 		puts "COOOOOOOOOOOOOL" + GAP_LINE
-		CLI::handle_query(user: "member", type: "advanced")
+		CLI::handle_query(user: "member", type: "advanced", user: user)
 	end
 
-	def advanced_guest
-		puts CLI::make_title("Advanced") + GAP_LINE
-		question =  START + "Choose a filter." + GAP_LINE	
-		options = {
-			"1" => {label: "TYPE", method: nil},
-			"2" => {label: "PRICE", method: nil},
-			"3" => {label: "ACCESSLEVEL", method: nil},
-			"4" => {label: "PARTICIPANT", method: nil},
-		}
-		filter = CLI::make_options(question, options)
-		
-		if filter == "1"
-			question = START + "Choose a type." + GAP_LINE	
-			options = {
-				"1" => {label: "EDUCATION", method: nil},
-				"2" => {label: "RECREATION", method: nil},
-				"3" => {label: "SOCIAL", method: nil},
-				"4" => {label: "CHARITY", method: nil},
-				"5" => {label: "COOKING", method: nil},
-				"6" => {label: "RELAXTION", method: nil},
-				"7" => {label: "MUSIC", method: nil},
-				"8" => {label: "BUYSWORK", method: nil},
-			}
-			selected = CLI::make_options(question, options)
-		elsif filter == "2"
-			puts "[is0]: Price? (Free->Paid = 0->1)" + GAP_LINE
-			selected  = puts_long_promot
-		elsif filter == "3"
-			puts "[is0]: Accessibility? (Easy->Hard = 0->1)" + GAP_LINE
-			selected  = puts_long_promot
-		elsif filter == "4"
-			puts "[is0]: Participants? (0->N)" + GAP_LINE
-			selected  = puts_long_promot
-		end
-
-		# data
-		# handle no data
-	end
-
-	module_function :handle_query, :surprise, :surprise_guest, :advanced, :advanced_guest
+	module_function :handle_query, :surprise, :advanced
 end

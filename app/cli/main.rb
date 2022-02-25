@@ -18,7 +18,7 @@ module CLI
 			"1" => {label: "START", method: "login"},
 			QUIT => {label: "QUIT", method: "quit"}
 		}
-		CLI::make_options(question, options)
+		CLI::make_options(question: question, opt: options)
 	end
 
 	def menu
@@ -26,34 +26,33 @@ module CLI
 		CLI::start
 	end
 
-	def home
+	def home(user)
 		
-		puts CLI::make_title("Home") + GAP_LINE
-	
-		# options
-		question = START + "It's you #{CLI::username}! How can I help you?" + GAP_LINE
-		options = {
-			"1" => {label: "SURPRISE", method: "surprise"},
-			"2" => {label: "ADVANCED", method: "advanced"},
-			"3" => {label: "COLLECTION", method: "collection"},
-			MENU => {label: "MENU", method: "menu"}
-		}
-		CLI::make_options(question, options)
-	end
-
-	def home_guest
-		
-		puts CLI::make_title("Home") + GAP_LINE
-		CLI::username = "Guest"
-
-		# options
-		question = START + "Welcome my guest! How can I help you?" + GAP_LINE
-		options = {
-			"1" => {label: "SURPRISE", method: "surprise_guest"},
-			"2" => {label: "ADVANCED", method: "advanced_guest"},
-			MENU => {label: "MENU", method: "menu"}
-		}
-		CLI::make_options(question, options)
+		puts CLI::make_title("Home" + WHITE_SPACE + "(#{CLI::username})") + GAP_LINE
+		if user == "guest"
+			# options
+			question = START + "Welcome my guest! How can I help you?" + GAP_LINE
+			options = {
+				"1" => {label: "SURPRISE", method: "surprise", argument:user},
+				"2" => {label: "ADVANCED", method: "advanced", argument:user},
+				MENU => {label: "MENU", method: "menu"}
+			}
+		elsif user == "member"
+			question = START + "It's you #{CLI::username}! How can I help you?" + GAP_LINE
+			options = {
+				"1" => {label: "SURPRISE", method: "surprise", argument:user},
+				"2" => {label: "ADVANCED", method: "advanced", argument:user},
+				"3" => {label: "COLLECTION", method: "collection", argument:user},
+				MENU => {label: "MENU", method: "menu"}
+			}
+		else
+			begin
+				raise CliError
+			rescue CliError => error
+				puts error.invalid_argument
+			end
+		end
+		CLI::make_options(question: question, opt: options)
 	end
 
 	def quit
@@ -69,5 +68,5 @@ module CLI
 		exit
 	end
 
-	module_function :setup, :start, :menu, :quit, :home, :home_guest
+	module_function :setup, :start, :menu, :quit, :home
 end

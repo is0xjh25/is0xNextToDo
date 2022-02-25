@@ -1,7 +1,7 @@
 module CLI
 
 	# Static Variables
-	INITIAL_USER = "Unknown User"
+	INITIAL_USER = "Guest"
 	GAP_LINE = "\n\n"
 	VER = "|"
 	HOR = "~"

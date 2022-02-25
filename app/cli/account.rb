@@ -9,10 +9,10 @@ module CLI
 		options = {
 			"1" => {label: "GOT ONE", method: "member"},
 			"2" => {label: "CREATE ONE", method: "create_account"},
-			"3" => {label: "BE GUEST", method: "home_guest"},
+			"3" => {label: "BE GUEST", method: "home", argument: "guest"},
 			MENU => {label: "MENU", method: "menu"}
 		}
-		CLI::make_options(question, options)
+		CLI::make_options(question: question, opt: options)
 	end
 
 	def member
@@ -42,7 +42,7 @@ module CLI
 			CLI::username = "Yun-Chi"
 			CLI::login_failed = false
 			CLI::login_attempt = 0
-			home
+			CLI::home("member")
 		else
 			CLI::login_failed = true
 			CLI::login_attempt += 1
@@ -53,10 +53,10 @@ module CLI
 			options = {
 				"1" => {label: "TRY AGAIN", method: "member"},
 				"2" => {label: "RESCUE", method: "rescue"},
-				"3" => {label: "BE GUEST", method: "home_guest"},
+				"3" => {label: "BE GUEST", method: "home", argument: "guest"},
 				MENU => {label: "MENU", method: "menu"}
 			}
-			make_options(question, options)
+			CLI::make_options(question: question, opt: options)
 		end
 	end
 
@@ -103,7 +103,7 @@ module CLI
 		# account info table
 		# set @username
 		puts START + "Thank you for join is0xNextToDo." + GAP_LINE
-		puts home
+		CLI::home("member")
 	end
 
 	def rescue
@@ -116,7 +116,7 @@ module CLI
 			"1" => {label: "USERNAME", method: nil},
 			"2" => {label: "EMAIL", method: nil},
 		}
-		selected = CLI::make_options(question, options)
+		selected = CLI::make_options(q: question, opt: options)
 
 		puts START + "I'm listening."+ GAP_LINE
 		
@@ -131,7 +131,7 @@ module CLI
 				"1" => {label: "LET'S GO", method: nil},
 				"2" => {label: "ALL GOOD", method: nil},
 			}
-			selected_1 = CLI::make_options(question, options)
+			selected_1 = CLI::make_options(question: question, opt: options)
 			
 			if selected_1 == "1"
 				password = CLI::set_password
@@ -144,7 +144,7 @@ module CLI
 				puts START + "Here is your account information." + GAP_LINE
 				# account info table
 				# set username
-				CLI::home
+				CLI::home("member")
 			end
 		elsif CLI::rescue_attempt > MAX_RESCUE_ATTEMPT
 			begin
@@ -160,9 +160,9 @@ module CLI
 			options = {
 				"1" => {label: "RESCUE", method: "rescue"},
 				"2" => {label: "CREATE ONE", method: "create_account"},
-				"3" => {label: "BE GUEST", method: "home_guest"},
+				"3" => {label: "BE GUEST", method: "home", argument: "guest"},
 			}
-			CLI::make_options(question, options)
+			CLI::make_options(question: question, opt: options)
 		end
 	end
 

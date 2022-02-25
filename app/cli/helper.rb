@@ -68,14 +68,14 @@ module CLI
 		end
 	end
 
-	def make_options(question, options)
+	def make_options(question: question, opt: options)
 		
 		warning_count = 0
 		puts question
-		puts_options(options)
+		puts_options(opt)
 		input = puts_short_promot
 
-		while !options.has_key?(input)
+		while !opt.has_key?(input)
 			if warning_count > MAX_INPUT_ATTEMPT
 				begin
 					raise CliError
@@ -89,8 +89,12 @@ module CLI
 			warning_count += 1
 		end
 
-		if options[input][:method]
-			self.send(options[input][:method])
+		if opt[input][:method]
+			if opt[input][:argument]
+				self.send(opt[input][:method], opt[input][:argument])
+			else
+				self.send(opt[input][:method])
+			end
 		else
 			input
 		end
