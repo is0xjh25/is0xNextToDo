@@ -100,9 +100,12 @@ module CLI
 		# create account
 		puts START + "Your account has been created." + GAP_LINE
 		puts START + "Here is your account information." + GAP_LINE
-		# account info table
-		# set @username
+		# display account info
+		CLI::puts_account
 		puts START + "Thank you for join is0xNextToDo." + GAP_LINE
+		
+		# set user
+		CLI::username = username
 		CLI::home("member")
 	end
 
@@ -138,12 +141,15 @@ module CLI
 				#update password
 				puts START + "Your password has been update." + GAP_LINE
 				puts START + "Here is your account information." + GAP_LINE
-				# account info table
+				# display account info
+				CLI::puts_account
 				CLI::login
 			elsif selected_1 == "2"
 				puts START + "Here is your account information." + GAP_LINE
-				# account info table
-				# set username
+				# display account info
+				CLI::puts_account
+				# set user
+				CLI::username = username
 				CLI::home("member")
 			end
 		elsif CLI::rescue_attempt > MAX_RESCUE_ATTEMPT
@@ -191,6 +197,24 @@ module CLI
 		# update password
 		password
 	end
+
+	def puts_account()
+		# example
+		info = {
+			"username": "is0xjh25",
+			"password": "12345678",
+			"email": "qyf@gmail.com",
+		}
+
+		col_name = ["username", "password", "email"]
+		col_max_length = col_name.max_by(&:length).size + 2
+
+		col_name.each do |e|
+			puts BORDER * col_max_length
+			puts VER + "#{e.capitalize}" + WHITE_SPACE * (col_max_length - e.size - 2) + VER + WHITE_SPACE + info[:"#{e}"]
+		end
+		puts BORDER * col_max_length + GAP_LINE
+	end
 	
-	module_function :login, :member, :create_account, :rescue, :set_password
+	module_function :login, :member, :create_account, :rescue, :set_password, :puts_account
 end

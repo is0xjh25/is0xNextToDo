@@ -96,14 +96,14 @@ module CLI
 
 		# show data
 		# handle no data
-		puts "COOOOOOOOOOOOOL" + GAP_LINE
+		CLI::puts_activity()
 		CLI::handle_query(user: "member", type: "advanced", user: user)
 	end
 
 	def puts_activity()
 		
 		# example
-		eg = {
+		info = {
 			"activity": "Learn a new programming language",
 			"accessibility": 0.25,
 			"type": "education",
@@ -117,7 +117,7 @@ module CLI
 
 		col_name.each do |e|
 			puts BORDER * col_max_length
-			puts VER + "#{e.capitalize}" + WHITE_SPACE * (col_max_length - e.size - 2) + VER + WHITE_SPACE + eg[:"#{e}"].to_s.capitalize
+			puts VER + "#{e.capitalize}" + WHITE_SPACE * (col_max_length - e.size - 2) + VER + WHITE_SPACE + info[:"#{e}"].to_s.capitalize
 		end
 		puts BORDER * col_max_length + GAP_LINE
 	end
