@@ -6,7 +6,6 @@ class CreateActivities < ActiveRecord::Migration[5.2]
 		t.integer :participant
 		t.float :accessibility
 		t.float :price
-		t.string :web_link
 		t.integer :key
 	  end
 	end
