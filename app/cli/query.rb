@@ -1,32 +1,48 @@
 module CLI
 
-	def handle_query(user:, type:)
+	def handle_query(type:, preference:)
 
 		question =  START + "Here you go! What to do next?" + GAP_LINE
 
-		if user == "member" && type == "surprise"
+		# surprise hanlder
+		if CLI::username == DEFAULT_USER && type == "surprise"
 			options = {
-				NEXT => {label: "NEXT", method: "surprise", argument: user},
+				NEXT => {label: "NEXT", method: "surprise"},
+				HOME => {label: "HOME", method: "home"}
+			}
+		elsif type == "surprise"
+			options = {
+				NEXT => {label: "NEXT", method: "surprise"},
 				SAVE => {label: "SAVE", method: ""},
-				HOME => {label: "HOME", method: "home", argument: user},
+				HOME => {label: "HOME", method: "home"}
 			}
-		elsif user == "guest" && type == "surprise"
+		# advanced hanlder
+		elsif CLI::username == DEFAULT_USER && type == "advanced"
 			options = {
-				NEXT=> {label: "NEXT", method: "surprise", argument: user},
-				HOME => {label: "HOME", method: "home", argument: user},
+				NEXT => {label: "NEXT", method: "advanced"},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"}
 			}
-		elsif user == "member" && type == "advanced"
+		elsif type == "advanced"
 			options = {
 				NEXT => {label: "NEXT", method: ""},
 				SAVE => {label: "SAVE", method: ""},
-				RESET => {label: "RESET", method: "advanced", argument: user},
-				HOME => {label: "HOME", method: "home", argument: user},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"}
 			}
-		elsif user == "guest" && type == "advanced"
+		# collection handler
+		elsif CLI::username == DEFAULT_USER && type == "collection"
 			options = {
-				NEXT => {label: "NEXT", method: "advanced", argument: user},
-				RESET => {label: "RESET", method: "advanced", argument: user},
-				HOME => {label: "HOME", method: "home", argument: user},
+				NEXT => {label: "NEXT", method: "advanced"},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"}
+			}
+		elsif type == "collection"
+			options = {
+				NEXT => {label: "NEXT", method: ""},
+				SAVE => {label: "SAVE", method: ""},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"}
 			}
 		else
 			begin
@@ -40,7 +56,7 @@ module CLI
 	end
 
 	# guest and member can access
-	def surprise(user)
+	def surprise
 
 		puts CLI::make_title("Surprise") + GAP_LINE
 		
@@ -49,10 +65,10 @@ module CLI
 			CLI::puts_activity(response[:info])
 		elsif response[:status] == "warning"
 			puts START_WARNING + response[:info] + "." + GAP_LINE
-			CLI::home(user)
+			CLI::home
 		elsif response[:status] == "error"
 			puts START_ERROR + response[:info] + "." + GAP_LINE
-			CLI::home(user)
+			CLI::home
 		else
 			begin
 				raise CliError
@@ -62,19 +78,11 @@ module CLI
 		end
 
 		# following actions
-		if user == "guest" || user == "member"
-			CLI::handle_query(user: user, type: "surprise")
-		else
-			begin
-				raise CliError
-			rescue CliError => error
-				puts error.invalid_argument
-			end
-		end
+		CLI::handle_query(type: "surprise", preference: nil)
 	end
 
 	# guest and member can access
-	def advanced(user)
+	def advanced
 		
 		categories = ["type", "participant", "accessibility", "price"]
 		puts CLI::make_title("Advanced") + GAP_LINE
@@ -118,10 +126,10 @@ module CLI
 			CLI::puts_activity(response[:info])
 		elsif response[:status] == "warning"
 			puts START_WARNING + response[:info] + "." + GAP_LINE
-			CLI::home(user)
+			CLI::home
 		elsif response[:status] == "error"
 			puts START_ERROR + response[:info] + "." + GAP_LINE
-			CLI::home(user)
+			CLI::home
 		else
 			begin
 				raise CliError
@@ -131,15 +139,7 @@ module CLI
 		end
 
 		# following actions
-		if user == "guest" || user == "member"
-			CLI::handle_query(user: user, type: "advanced")
-		else
-			begin
-				raise CliError
-			rescue CliError => error
-				puts error.invalid_argument
-			end
-		end
+		CLI::handle_query(type: "advanced", preference: nil)
 	end
 
 	# member access only

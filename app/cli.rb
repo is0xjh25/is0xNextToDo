@@ -1,7 +1,7 @@
 module CLI
 
 	# Static Variables
-	INITIAL_USER = "Guest"
+	DEFAULT_USER = "Guest"
 	GAP_LINE = "\n\n"
 	BORDER = "-"
 	VER = "|"
@@ -120,7 +120,7 @@ module CLI
 		end
 
 		def key_not_found
-			puts START_ERROR + "The key cannot be founded in the hash."
+			puts START_ERROR + "The key cannot be found in the hash."
 		end
 	end
 end

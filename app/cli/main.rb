@@ -2,7 +2,7 @@ module CLI
 
 	# initialization or restart
 	def setup
-		CLI::username = INITIAL_USER
+		CLI::username = DEFAULT_USER
 		CLI::login_failed = false
 		CLI::login_attempt = 0
 		CLI::rescue_attempt = 0
@@ -29,31 +29,25 @@ module CLI
 	end
 
 	# guest and member can access
-	def home(user)
+	def home
 		
 		puts CLI::make_title("Home" + WHITE_SPACE + "(#{CLI::username})") + GAP_LINE
-		if user == "guest"
+		if CLI::username.downcase == DEFAULT_USER.downcase
 			# options
 			question = START + "Welcome my guest! How can I help you?" + GAP_LINE
 			options = {
-				"1" => {label: "SURPRISE", method: "surprise", argument:user},
-				"2" => {label: "ADVANCED", method: "advanced", argument:user},
-				MENU => {label: "MENU", method: "menu"}
-			}
-		elsif user == "member"
-			question = START + "It's you #{CLI::username}! How can I help you?" + GAP_LINE
-			options = {
-				"1" => {label: "SURPRISE", method: "surprise", argument:user},
-				"2" => {label: "ADVANCED", method: "advanced", argument:user},
-				"3" => {label: "COLLECTION", method: "collection", argument:user},
+				"1" => {label: "SURPRISE", method: "surprise"},
+				"2" => {label: "ADVANCED", method: "advanced"},
 				MENU => {label: "MENU", method: "menu"}
 			}
 		else
-			begin
-				raise CliError
-			rescue CliError => error
-				puts error.invalid_argument
-			end
+			question = START + "It's you #{CLI::username}! How can I help you?" + GAP_LINE
+			options = {
+				"1" => {label: "SURPRISE", method: "surprise"},
+				"2" => {label: "ADVANCED", method: "advanced"},
+				"3" => {label: "COLLECTION", method: "collection"},
+				MENU => {label: "MENU", method: "menu"}
+			}
 		end
 		CLI::make_options(question: question, opt: options)
 	end

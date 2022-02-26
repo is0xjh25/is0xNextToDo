@@ -10,7 +10,7 @@ module CLI
 		options = {
 			"1" => {label: "GOT ONE", method: "member"},
 			"2" => {label: "CREATE ONE", method: "create_account"},
-			"3" => {label: "BE GUEST", method: "home", argument: "guest"},
+			"3" => {label: "BE GUEST", method: "home"},
 			MENU => {label: "MENU", method: "menu"}
 		}
 		CLI::make_options(question: question, opt: options)
@@ -44,7 +44,7 @@ module CLI
 			CLI::username = "Yun-Chi"
 			CLI::login_failed = false
 			CLI::login_attempt = 0
-			CLI::home("member")
+			CLI::home
 		else
 			CLI::login_failed = true
 			CLI::login_attempt += 1
@@ -55,7 +55,7 @@ module CLI
 			options = {
 				"1" => {label: "TRY AGAIN", method: "member"},
 				"2" => {label: "RESCUE", method: "rescue"},
-				"3" => {label: "BE GUEST", method: "home", argument: "guest"},
+				"3" => {label: "BE GUEST", method: "home"},
 				MENU => {label: "MENU", method: "menu"}
 			}
 			CLI::make_options(question: question, opt: options)
@@ -71,7 +71,7 @@ module CLI
 		# username
 		puts START + "Enter your new username." + GAP_LINE
 		username = puts_long_promot
-		while username == "asd"
+		while username == "asd" || username.downcase == DEFAULT_USER.downcase
 			puts START_WARNING + "The username has been used." + GAP_LINE
 			puts START + "Pick another one." + GAP_LINE
 			username = puts_long_promot
@@ -109,7 +109,7 @@ module CLI
 		
 		# set user
 		CLI::username = username
-		CLI::home("member")
+		CLI::home
 	end
 
 	# guest access only
@@ -154,7 +154,7 @@ module CLI
 				CLI::puts_account
 				# set user
 				CLI::username = username
-				CLI::home("member")
+				CLI::home
 			end
 		elsif CLI::rescue_attempt > MAX_RESCUE_ATTEMPT
 			begin
@@ -170,7 +170,7 @@ module CLI
 			options = {
 				"1" => {label: "RESCUE", method: "rescue"},
 				"2" => {label: "CREATE ONE", method: "create_account"},
-				"3" => {label: "BE GUEST", method: "home", argument: "guest"},
+				"3" => {label: "BE GUEST", method: "home"},
 			}
 			CLI::make_options(question: question, opt: options)
 		end
