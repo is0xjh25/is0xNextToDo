@@ -1,23 +1,23 @@
-module CLI
+module NextToDo
 
 	# guest and member can access
 	def surprise
 
-		puts CLI::make_title("New Activity") + GAP_LINE
+		puts make_title("New Activity") + GAP_LINE
 		
 		response = ApiHelper::get_random
 		if response[:status] == "success"
-			CLI::puts_activity(response[:info])
+			puts_activity(response[:info])
 		elsif response[:status] == "warning"
 			puts START_WARNING + response[:info] + "." + GAP_LINE
-			CLI::home
+			home
 		elsif response[:status] == "error"
 			puts START_ERROR + response[:info] + "." + GAP_LINE
-			CLI::home
+			home
 		else
 			begin
-				raise CliError
-			rescue CliError => error
+				raise NextToDoError
+			rescue NextToDoError => error
 				puts error.key_not_found
 			end
 		end
@@ -25,13 +25,13 @@ module CLI
 		# following actions
 		response[:type] = "surprise"
 		response[:preference] = nil
-		CLI::handle_query(response)
+		handle_query(response)
 	end
 
 	# guest and member can access
 	def advanced(preference=nil)
 	
-		puts CLI::make_title("Advanced") + GAP_LINE
+		puts make_title("Advanced") + GAP_LINE
 		
 		if preference == nil
 			
@@ -43,7 +43,7 @@ module CLI
 				"3" => {label: "ACCESSLEVEL", method: nil},
 				"4" => {label: categories[3].upcase, method: nil},
 			}
-			filter = CLI::make_options(question: question, opt: options)
+			filter = make_options(question: question, opt: options)
 			
 			if filter == "1"
 				types = ["education", "recreational", "social", "diy", "charity", "cooking", "relaxation", "music", "busywork"]
@@ -58,17 +58,17 @@ module CLI
 					"7" => {label: types[6].upcase, method: nil},
 					"8" => {label: types[7].upcase, method: nil},
 				}
-				value = CLI::make_options(question: question, opt: options)
+				value = make_options(question: question, opt: options)
 				value = types[value.to_i-1]
 			elsif filter == "2"
 				puts "[is0]: Participants? (0->N)" + GAP_LINE
-				value  = CLI::puts_long_promot
+				value  = puts_long_promot
 			elsif filter == "3"
 				puts "[is0]: Accessibility? (Easy->Hard = 0->1)" + GAP_LINE
-				value  = CLI::puts_long_promot
+				value  = puts_long_promot
 			elsif filter == "4"
 				puts "[is0]: Price? (Free->Paid = 0->1)" + GAP_LINE
-				value  = CLI::puts_long_promot
+				value  = puts_long_promot
 			end
 			
 			preference = {opt: categories[filter.to_i-1], val: value.to_s}
@@ -76,20 +76,20 @@ module CLI
 
 		response = ApiHelper::get_advanced(opt: preference[:opt], val:preference[:val])
 		if response[:status] == "success"
-			puts CLI::make_title("New Activity") + GAP_LINE
-			CLI::puts_activity(response[:info])
+			puts make_title("New Activity") + GAP_LINE
+			puts_activity(response[:info])
 		elsif response[:status] == "warning"
 			puts START_WARNING + response[:info] + "." + GAP_LINE
 			puts START + "Please try again!" + GAP_LINE
-			CLI::advanced
+			advanced
 		elsif response[:status] == "error"
 			puts START_ERROR + response[:info] + "." + GAP_LINE
 			puts START + "Please try again!" + GAP_LINE
-			CLI::advanced
+			advanced
 		else
 			begin
-				raise CliError
-			rescue CliError => error
+				raise NextToDoError
+			rescue NextToDoError => error
 				puts error.key_not_found
 			end
 		end
@@ -97,7 +97,7 @@ module CLI
 		# following actions
 		response[:type] = "advanced"
 		response[:preference] = preference
-		CLI::handle_query(response)
+		handle_query(response)
 	end
 
 	# member access only
@@ -115,23 +115,23 @@ module CLI
 				"3" => {label: "ACCESSLEVEL", method: nil},
 				"4" => {label: categories[3].upcase, method: nil},
 			}
-			sorted = CLI::make_options(question: question, opt: options)
+			sorted = make_options(question: question, opt: options)
 
 			question =  START + "Ordered by?" + GAP_LINE	
 			options = {
 				"1" => {label: orders[0].upcase, method: nil},
 				"2" => {label: orders[1].upcase, method: nil},
 			}
-			ordered = CLI::make_options(question: question, opt: options)
+			ordered = make_options(question: question, opt: options)
 			
 			# Sorted order
-			CLI::collection({sorted: categories[sorted.to_i-1], ordered: orders[ordered.to_i-1]})
+			collection({sorted: categories[sorted.to_i-1], ordered: orders[ordered.to_i-1]})
 		elsif categories.include?(sort[:sorted]) && orders.include?(sort[:ordered])
 			# info = get data from database(username, sorted)
 		else
 			begin
-				raise CliError
-			rescue CliError => error
+				raise NextToDoError
+			rescue NextToDoError => error
 				puts error.key_not_found
 			end
 		end
@@ -142,8 +142,8 @@ module CLI
 			{"activity"=>"Learn Morse code", "type"=>"education", "participants"=>1, "price"=>0, "link"=>"https://en.wikipedia.org/wiki/Morse_code", "key"=>"3646173", "accessibility"=>0},
 		] 
 
-		puts CLI::make_title(CLI::username + "'s" + WHITE_SPACE + "Collection") + GAP_LINE
-		CLI::puts_collection(data)
+		puts make_title(username + "'s" + WHITE_SPACE + "Collection") + GAP_LINE
+		puts_collection(data)
 
 		options = {
 			"1" => {label: "RANDOM", method: nil},
@@ -151,16 +151,16 @@ module CLI
 			"3" => {label: "SORTED BY", method: "collection", argument: "reset"},
 			HOME => {label: "HOME", method: "home"},
 		}
-		action = CLI::make_options(question: nil, opt: options)
+		action = make_options(question: nil, opt: options)
 
 		# RANDOM
 		if action == "1"
 			# following actions
 			info = data[rand(data.size).to_i]
 			response = {type: "collection", info: info}
-			puts CLI::make_title("Saved Activity") + GAP_LINE
-			CLI::puts_activity(info)
-			CLI::handle_query(response)
+			puts make_title("Saved Activity") + GAP_LINE
+			puts_activity(info)
+			handle_query(response)
 		# PICK
 		elsif action == "2"
 
@@ -170,7 +170,7 @@ module CLI
 			
 			while !picked.between?(0, data.size-1)
 				
-				picked = CLI::puts_long_promot.to_i-1
+				picked = puts_long_promot.to_i-1
 				attempt += 1
 				if attempt > 1
 					puts START + "Please enter a valid NUMBER." + GAP_LINE
@@ -178,26 +178,26 @@ module CLI
 
 				if attempt > MAX_INPUT_ATTEMPT
 					begin
-						raise CliError
-					rescue CliError => error
+						raise NextToDoError
+					rescue NextToDoError => error
 						puts error.excessive_warning
-						CLI::quit
+						quit
 					end
 				end
 			end
 
 			info = data[picked]
 			response = {type: "collection", info: info}
-			puts CLI::make_title("Saved Activity") + GAP_LINE
-			CLI::puts_activity(info)
-			CLI::handle_query(response)
+			puts make_title("Saved Activity") + GAP_LINE
+			puts_activity(info)
+			handle_query(response)
 		end
 	end
 
 	def handle_query(response)
 
 		# surprise handler
-		if CLI::username == DEFAULT_USER && response[:type] == "surprise"
+		if NextToDo::username == DEFAULT_USER && response[:type] == "surprise"
 			options = {
 				NEXT => {label: "NEXT", method: "surprise"},
 				HOME => {label: "HOME", method: "home"}
@@ -209,7 +209,7 @@ module CLI
 				HOME => {label: "HOME", method: "home"}
 			}
 		# advanced handler
-		elsif CLI::username == DEFAULT_USER && response[:type] == "advanced"
+		elsif NextToDo::username == DEFAULT_USER && response[:type] == "advanced"
 			options = {
 				NEXT => {label: "NEXT", method: "advanced", argument: response[:preference]},
 				RESET => {label: "RESET", method: "advanced"},
@@ -230,13 +230,13 @@ module CLI
 			}
 		else
 			begin
-				raise CliError
-			rescue CliError => error
+				raise NextToDoError
+			rescue NextToDoError => error
 				puts error.invalid_argument
 			end
 		end
 
-		CLI::make_options(question: nil, opt: options)
+		make_options(question: nil, opt: options)
 	end
 
 	# member access only
@@ -263,13 +263,13 @@ module CLI
 			}
 		else
 			begin
-				raise CliError
-			rescue CliError => error
+				raise NextToDoError
+			rescue NextToDoError => error
 				puts error.key_not_found
 			end
 		end
 
-		CLI::make_options(question: question, opt: options)
+		make_options(question: question, opt: options)
 	end
 
 	# member access only
@@ -281,15 +281,15 @@ module CLI
 			NO => {label: "NO", method: nil},
 			YES => {label: "YES", method: nil},
 		}
-		confirm = CLI::make_options(question: question, opt: options)
+		confirm = make_options(question: question, opt: options)
 
 		if confirm == NO
-			CLI::puts_activity(response[:info])
-			CLI::handle_query(response)
+			puts_activity(response[:info])
+			handle_query(response)
 		elsif confirm == YES
 			### remove by (username, response[:key])
 			puts START + "The activity has been removed" + GAP_LINE
-			CLI::collection
+			collection
 		end
 	end
 

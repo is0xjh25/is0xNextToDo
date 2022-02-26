@@ -1,17 +1,17 @@
-module CLI
+module NextToDo
 
 	# initialization or restart
 	def setup
-		CLI::username = DEFAULT_USER
-		CLI::login_failed = false
-		CLI::login_attempt = 0
-		CLI::rescue_attempt = 0
+		NextToDo::username = DEFAULT_USER
+		NextToDo::login_failed = false
+		NextToDo::login_attempt = 0
+		NextToDo::rescue_attempt = 0
 	end
 
 	# guest and member can access
 	def start
 					
-		puts CLI::make_title("Main Menu") + GAP_LINE
+		puts make_title("Main Menu") + GAP_LINE
 
 		# options
 		question = START + "What's your next move?" + GAP_LINE
@@ -19,20 +19,20 @@ module CLI
 			"1" => {label: "START", method: "login"},
 			QUIT => {label: "QUIT", method: "quit"}
 		}
-		CLI::make_options(question: question, opt: options)
+		make_options(question: question, opt: options)
 	end
 
 	# guest and member can access
 	def menu
-		CLI::setup
-		CLI::start
+		setup
+		start
 	end
 
 	# guest and member can access
 	def home
 		
-		puts CLI::make_title("Home" + WHITE_SPACE + "(#{CLI::username})") + GAP_LINE
-		if CLI::username.downcase == DEFAULT_USER.downcase
+		puts make_title("Home" + WHITE_SPACE + "(#{NextToDo::username})") + GAP_LINE
+		if NextToDo::username.downcase == DEFAULT_USER.downcase
 			# options
 			question = START + "Welcome my guest! How can I help you?" + GAP_LINE
 			options = {
@@ -41,7 +41,7 @@ module CLI
 				MENU => {label: "MENU", method: "menu"}
 			}
 		else
-			question = START + "It's you #{CLI::username}! How can I help you?" + GAP_LINE
+			question = START + "It's you #{NextToDo::username}! How can I help you?" + GAP_LINE
 			options = {
 				"1" => {label: "SURPRISE", method: "surprise"},
 				"2" => {label: "ADVANCED", method: "advanced"},
@@ -49,7 +49,7 @@ module CLI
 				MENU => {label: "MENU", method: "menu"}
 			}
 		end
-		CLI::make_options(question: question, opt: options)
+		make_options(question: question, opt: options)
 	end
 
 	# guest and member can access
@@ -60,12 +60,12 @@ module CLI
 			NO => {label: "NO", method: nil},
 			YES => {label: "YES", method: nil},
 		}
-		confirm = CLI::make_options(question: question, opt: options)
+		confirm = make_options(question: question, opt: options)
 
 		if confirm == NO
-			CLI::menu
+			menu
 		elsif confirm == YES
-			puts CLI::make_title("See You Next Time")
+			puts make_title("See You Next Time")
 			puts GAP_LINE
 			puts File.readlines('./resources/favicon.txt')
 			puts
@@ -73,7 +73,7 @@ module CLI
 			puts GAP_LINE
 			print COPY_RIGHT
 	
-			input = CLI::get_char
+			input = get_char
 			exit
 		end
 	end

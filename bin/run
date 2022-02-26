@@ -2,4 +2,4 @@
 
 require_relative '../config/environment.rb'
 
-CLI::Cli.new.call
+NextToDo::Execute.new.call

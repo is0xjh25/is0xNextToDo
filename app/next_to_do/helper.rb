@@ -1,4 +1,4 @@
-module CLI
+module NextToDo
 		
 	def make_title(text)
 		
@@ -39,8 +39,8 @@ module CLI
 					line += "[#{key.upcase}]" + "#{label}" + WHITE_SPACE * (option_length - overall_length + 1)
 				else
 					begin
-						raise CliError
-					rescue CliError => error
+						raise NextToDoError
+					rescue NextToDoError => error
 						puts error.option_too_long
 					end
 				end  
@@ -58,12 +58,12 @@ module CLI
 				key, value = split_options.shift
 				split_options_1.merge!("#{key}" => value)
 			end
-			CLI::puts_options(split_options_1)
-			CLI::puts_options(split_options)
+			puts_options(split_options_1)
+			puts_options(split_options)
 		else
 			begin
-				raise CliError
-			rescue CliError => error
+				raise NextToDoError
+			rescue NextToDoError => error
 				puts error.options_overload
 			end
 		end
@@ -80,10 +80,10 @@ module CLI
 		while !opt.has_key?(input)
 			if warning_count > MAX_INPUT_ATTEMPT
 				begin
-					raise CliError
-				rescue CliError => error
+					raise NextToDoError
+				rescue NextToDoError => error
 					puts error.excessive_warning
-					CLI::quit
+					quit
 				end
 			end
 			puts START_WARNING + "Please enter a valid CHARACTER or NUMBER." + GAP_LINE
@@ -103,14 +103,14 @@ module CLI
 	end
 
 	def puts_short_promot
-		print "[#{CLI::username}]: "
+		print "[#{NextToDo::username}]: "
 		input = get_char.upcase
 		print input + GAP_LINE
 		return input
 	end
 
 	def puts_long_promot
-		print "[#{CLI::username}]: "
+		print "[#{NextToDo::username}]: "
 		input = gets.strip.downcase
 		puts
 		return input

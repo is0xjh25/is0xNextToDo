@@ -1,4 +1,4 @@
-module CLI
+module NextToDo
 
 	# Static Variables
 	DEFAULT_USER = "Guest"
@@ -62,15 +62,15 @@ module CLI
 	end
 
 	# Entry
-	class Cli
+	class Execute
 
 		def initialize
-			CLI::setup
+			NextToDo::setup
 		end
 
-		# start the CLI
+		# start the NextToDo
 		def call
-			puts CLI::make_title("Welcome to NextToDo")
+			puts NextToDo::make_title("Welcome to NextToDo")
 			puts GAP_LINE
 			puts File.readlines('./resources/favicon.txt')
 			puts
@@ -78,16 +78,16 @@ module CLI
 			puts GAP_LINE
 			print COPY_RIGHT
 			
-			input = CLI::get_char
+			input = NextToDo::get_char
 			puts GAP_LINE
 			puts File.readlines('./resources/app-description.txt')
 			puts
-			CLI::start
+			NextToDo::start
 		end
 	end
 
 	# Error Class for testing
-	class CliError < StandardError
+	class NextToDoError < StandardError
 
 		def excessive_warning
 			puts START_ERROR + "Retard Alert!!!" + GAP_LINE
