@@ -79,15 +79,10 @@ module CLI
 			print COPY_RIGHT
 			
 			input = CLI::get_char
-			if input != "q"
-				puts GAP_LINE
-				puts File.readlines('./resources/app-description.txt')
-				puts
-				CLI::start
-			else
-				puts GAP_LINE
-				CLI::quit
-			end
+			puts GAP_LINE
+			puts File.readlines('./resources/app-description.txt')
+			puts
+			CLI::start
 		end
 	end
 

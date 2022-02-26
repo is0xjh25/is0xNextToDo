@@ -55,16 +55,27 @@ module CLI
 	# guest and member can access
 	def quit
 		
-		puts CLI::make_title("See You Next Time")
-		puts GAP_LINE
-		puts File.readlines('./resources/favicon.txt')
-		puts
-		puts File.readlines('./resources/bye.txt') 
-		puts GAP_LINE
-		print COPY_RIGHT
+		question = START + "Are you sure want to leave us?" + GAP_LINE
+		options = {
+			NO => {label: "NO", method: nil},
+			YES => {label: "YES", method: nil},
+		}
+		confirm = CLI::make_options(question: question, opt: options)
 
-		input = CLI::get_char
-		exit
+		if confirm == NO
+			CLI::menu
+		elsif confirm == YES
+			puts CLI::make_title("See You Next Time")
+			puts GAP_LINE
+			puts File.readlines('./resources/favicon.txt')
+			puts
+			puts File.readlines('./resources/bye.txt') 
+			puts GAP_LINE
+			print COPY_RIGHT
+	
+			input = CLI::get_char
+			exit
+		end
 	end
 
 	module_function :setup, :start, :menu, :quit, :home
