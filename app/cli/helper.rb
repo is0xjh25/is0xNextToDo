@@ -23,6 +23,7 @@ module CLI
 		`stty #{state}`
 	end
 
+	# create options 
 	def puts_options(options)
 				
 		content_length = DIVIDER_LENGTH
@@ -68,6 +69,7 @@ module CLI
 		end
 	end
 
+	# create options functionality
 	def make_options(question: question, opt: options)
 		
 		warning_count = 0

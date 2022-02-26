@@ -1,6 +1,6 @@
 module CLI
 
-	def handle_query(user: "guest", type: "surprise")
+	def handle_query(user:, type:)
 
 		question =  START + "Here you go! What to do next?" + GAP_LINE
 
@@ -39,14 +39,29 @@ module CLI
 		CLI::make_options(question: question, opt: options)
 	end
 
-	
+	# guest and member can access
 	def surprise(user)
 
 		puts CLI::make_title("Surprise") + GAP_LINE
-		# show data
-		# handle no data
-		CLI::puts_activity()
+		
+		response = ApiHelper::get_random
+		if response[:status] == "success"
+			CLI::puts_activity(response[:info])
+		elsif response[:status] == "warning"
+			puts START_WARNING + response[:info] + "." + GAP_LINE
+			CLI::home(user)
+		elsif response[:status] == "error"
+			puts START_ERROR + response[:info] + "." + GAP_LINE
+			CLI::home(user)
+		else
+			begin
+				raise CliError
+			rescue CliError => error
+				puts error.key_not_found
+			end
+		end
 
+		# following actions
 		if user == "guest" || user == "member"
 			CLI::handle_query(user: user, type: "surprise")
 		else
@@ -58,6 +73,7 @@ module CLI
 		end
 	end
 
+	# guest and member can access
 	def advanced(user)
 		
 		puts CLI::make_title("Advanced") + GAP_LINE
@@ -94,30 +110,49 @@ module CLI
 			selected  = puts_long_promot
 		end
 
-		# show data
-		# handle no data
-		CLI::puts_activity()
-		CLI::handle_query(user: "member", type: "advanced")
+		response = ApiHelper::get_random
+		if response[:status] == "success"
+			CLI::puts_activity(response[:info])
+		elsif response[:status] == "warning"
+			puts START_WARNING + response[:info] + "." + GAP_LINE
+			CLI::home(user)
+		elsif response[:status] == "error"
+			puts START_ERROR + response[:info] + "." + GAP_LINE
+			CLI::home(user)
+		else
+			begin
+				raise CliError
+			rescue CliError => error
+				puts error.key_not_found
+			end
+		end
+
+		# following actions
+		if user == "guest" || user == "member"
+			CLI::handle_query(user: user, type: "surprise")
+		else
+			begin
+				raise CliError
+			rescue CliError => error
+				puts error.invalid_argument
+			end
+		end
 	end
 
-	def puts_activity()
-		
-		# example
-		info = {
-			"activity": "Learn a new programming language",
-			"accessibility": 0.25,
-			"type": "education",
-			"participants": 1,
-			"price": 0.1,
-			"key": "5881028"
-		}
+	# member access only
+	def collection
+	end
 
+	# print out activit table
+	def puts_activity(info)
+		
+		# main categories
 		col_name = ["activity", "type", "participants", "accessibility", "price"]
 		col_max_length = col_name.max_by(&:length).size + 2
 
 		col_name.each do |e|
 			puts BORDER * col_max_length
-			puts VER + "#{e.capitalize}" + WHITE_SPACE * (col_max_length - e.size - 2) + VER + WHITE_SPACE + info[:"#{e}"].to_s.capitalize
+			puts VER + "#{e.capitalize}" + WHITE_SPACE * (col_max_length - e.size - 2) + VER + WHITE_SPACE + info["#{e}"].to_s.capitalize
 		end
 		puts BORDER * col_max_length + GAP_LINE
 	end

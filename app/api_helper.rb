@@ -42,13 +42,13 @@ module ApiHelper
 			when Net::HTTPSuccess
 				info = JSON.parse(response.body)
 				if info.keys[0] == "error"
-					return {status: "warning", response: info["error"]}
+					return {status: "warning", info: info["error"]}
 				else
-					return {status: "success", response: info}
+					return {status: "success", info: info}
 				end
 			else
 				error_text = response.code.to_s + " : " + response.message
-				return {status: "error", response: error_text}
+				return {status: "error", info: error_text}
 		end
 	end
 	

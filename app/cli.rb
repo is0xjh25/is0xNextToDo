@@ -118,5 +118,9 @@ module CLI
 		def invalid_argument
 			puts START_ERROR + "Invalid argument."
 		end
+
+		def key_not_found
+			puts START_ERROR + "The key cannot be founded in the hash."
+		end
 	end
 end

@@ -1,5 +1,6 @@
 module CLI
 
+	# guest and member can access
 	def login
 
 		puts CLI::make_title("Login") + GAP_LINE
@@ -15,6 +16,7 @@ module CLI
 		CLI::make_options(question: question, opt: options)
 	end
 
+	# guest and member can access
 	def member
 		
 		if !CLI::login_failed
@@ -60,6 +62,7 @@ module CLI
 		end
 	end
 
+	# guest access only
 	def create_account
 
 		puts CLI::make_title("Create Account") + GAP_LINE
@@ -109,6 +112,7 @@ module CLI
 		CLI::home("member")
 	end
 
+	# guest access only
 	def rescue
 
 		puts CLI::make_title("Rescue Account") + GAP_LINE
@@ -198,6 +202,7 @@ module CLI
 		password
 	end
 
+	# print out account information table
 	def puts_account()
 		# example
 		info = {

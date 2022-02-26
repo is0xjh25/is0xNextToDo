@@ -8,6 +8,7 @@ module CLI
 		CLI::rescue_attempt = 0
 	end
 
+	# guest and member can access
 	def start
 					
 		puts CLI::make_title("Main Menu") + GAP_LINE
@@ -21,11 +22,13 @@ module CLI
 		CLI::make_options(question: question, opt: options)
 	end
 
+	# guest and member can access
 	def menu
 		CLI::setup
 		CLI::start
 	end
 
+	# guest and member can access
 	def home(user)
 		
 		puts CLI::make_title("Home" + WHITE_SPACE + "(#{CLI::username})") + GAP_LINE
@@ -55,6 +58,7 @@ module CLI
 		CLI::make_options(question: question, opt: options)
 	end
 
+	# guest and member can access
 	def quit
 		
 		puts CLI::make_title("See You Next Time")
