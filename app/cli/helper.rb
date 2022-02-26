@@ -104,7 +104,7 @@ module CLI
 
 	def puts_short_promot
 		print "[#{CLI::username}]: "
-		input = get_char.downcase
+		input = get_char.upcase
 		print input + GAP_LINE
 		return input
 	end

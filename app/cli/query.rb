@@ -24,7 +24,7 @@ module CLI
 			}
 		elsif user == "guest" && type == "advanced"
 			options = {
-				NEXT => {label: "NEXT", method: ""},
+				NEXT => {label: "NEXT", method: "advanced", argument: user},
 				RESET => {label: "RESET", method: "advanced", argument: user},
 				HOME => {label: "HOME", method: "home", argument: user},
 			}
@@ -76,41 +76,44 @@ module CLI
 	# guest and member can access
 	def advanced(user)
 		
+		categories = ["type", "participant", "accessibility", "price"]
 		puts CLI::make_title("Advanced") + GAP_LINE
 		question =  START + "Choose a filter." + GAP_LINE	
 		options = {
-			"1" => {label: "TYPE", method: nil},
-			"2" => {label: "PRICE", method: nil},
+			"1" => {label: categories[0].upcase, method: nil},
+			"2" => {label: categories[1].upcase, method: nil},
 			"3" => {label: "ACCESSLEVEL", method: nil},
-			"4" => {label: "PARTICIPANT", method: nil},
+			"4" => {label: categories[3].upcase, method: nil},
 		}
 		filter = CLI::make_options(question: question, opt: options)
 		
 		if filter == "1"
+			types = ["education", "recreational", "social", "diy", "charity", "cooking", "relaxation", "music", "busywork"]
 			question = START + "Choose a type." + GAP_LINE	
 			options = {
-				"1" => {label: "EDUCATION", method: nil},
+				"1" => {label: types[0].upcase, method: nil},
 				"2" => {label: "RECREATION", method: nil},
-				"3" => {label: "SOCIAL", method: nil},
-				"4" => {label: "CHARITY", method: nil},
-				"5" => {label: "COOKING", method: nil},
-				"6" => {label: "RELAXTION", method: nil},
-				"7" => {label: "MUSIC", method: nil},
-				"8" => {label: "BUYSWORK", method: nil},
+				"3" => {label: types[2].upcase, method: nil},
+				"4" => {label: types[3].upcase, method: nil},
+				"5" => {label: types[4].upcase, method: nil},
+				"6" => {label: types[5].upcase, method: nil},
+				"7" => {label: types[6].upcase, method: nil},
+				"8" => {label: types[7].upcase, method: nil},
 			}
-			selected = CLI::make_options(question: question, opt: options)
+			value = CLI::make_options(question: question, opt: options)
+			value = types[value.to_i]
 		elsif filter == "2"
-			puts "[is0]: Price? (Free->Paid = 0->1)" + GAP_LINE
-			selected  = puts_long_promot
+			puts "[is0]: Participants? (0->N)" + GAP_LINE
+			value  = puts_long_promot
 		elsif filter == "3"
 			puts "[is0]: Accessibility? (Easy->Hard = 0->1)" + GAP_LINE
-			selected  = puts_long_promot
+			value  = puts_long_promot
 		elsif filter == "4"
-			puts "[is0]: Participants? (0->N)" + GAP_LINE
-			selected  = puts_long_promot
+			puts "[is0]: Price? (Free->Paid = 0->1)" + GAP_LINE
+			value  = puts_long_promot
 		end
 
-		response = ApiHelper::get_random
+		response = ApiHelper::get_advanced(opt: categories[filter.to_i], val:value.to_s)
 		if response[:status] == "success"
 			CLI::puts_activity(response[:info])
 		elsif response[:status] == "warning"
@@ -129,7 +132,7 @@ module CLI
 
 		# following actions
 		if user == "guest" || user == "member"
-			CLI::handle_query(user: user, type: "surprise")
+			CLI::handle_query(user: user, type: "advanced")
 		else
 			begin
 				raise CliError
