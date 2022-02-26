@@ -1,60 +1,5 @@
 module CLI
 
-	def handle_query(type:, preference:)
-
-		question =  START + "Here you go! What to do next?" + GAP_LINE
-
-		# surprise hanlder
-		if CLI::username == DEFAULT_USER && type == "surprise"
-			options = {
-				NEXT => {label: "NEXT", method: "surprise"},
-				HOME => {label: "HOME", method: "home"}
-			}
-		elsif type == "surprise"
-			options = {
-				NEXT => {label: "NEXT", method: "surprise"},
-				SAVE => {label: "SAVE", method: ""},
-				HOME => {label: "HOME", method: "home"}
-			}
-		# advanced hanlder
-		elsif CLI::username == DEFAULT_USER && type == "advanced"
-			options = {
-				NEXT => {label: "NEXT", method: "advanced", argument: preference},
-				RESET => {label: "RESET", method: "advanced"},
-				HOME => {label: "HOME", method: "home"}
-			}
-		elsif type == "advanced"
-			options = {
-				NEXT => {label: "NEXT", method: "advanced", argument: preference},
-				SAVE => {label: "SAVE", method: ""},
-				RESET => {label: "RESET", method: "advanced"},
-				HOME => {label: "HOME", method: "home"}
-			}
-		# collection handler
-		elsif CLI::username == DEFAULT_USER && type == "collection"
-			options = {
-				NEXT => {label: "NEXT", method: "advanced"},
-				RESET => {label: "RESET", method: "advanced"},
-				HOME => {label: "HOME", method: "home"}
-			}
-		elsif type == "collection"
-			options = {
-				NEXT => {label: "NEXT", method: ""},
-				SAVE => {label: "SAVE", method: ""},
-				RESET => {label: "RESET", method: "advanced"},
-				HOME => {label: "HOME", method: "home"}
-			}
-		else
-			begin
-				raise CliError
-			rescue CliError => error
-				puts error.invalid_argument
-			end
-		end
-
-		CLI::make_options(question: question, opt: options)
-	end
-
 	# guest and member can access
 	def surprise
 
@@ -78,13 +23,16 @@ module CLI
 		end
 
 		# following actions
-		CLI::handle_query(type: "surprise", preference: nil)
+		response[:type] = "surprise"
+		response[:preference] = nil
+		CLI::handle_query(response)
 	end
 
 	# guest and member can access
 	def advanced(preference = nil)
-
+	
 		if preference == nil
+			
 			categories = ["type", "participants", "accessibility", "price"]
 			puts CLI::make_title("Advanced") + GAP_LINE
 			question =  START + "Choose a filter." + GAP_LINE	
@@ -130,10 +78,12 @@ module CLI
 			CLI::puts_activity(response[:info])
 		elsif response[:status] == "warning"
 			puts START_WARNING + response[:info] + "." + GAP_LINE
-			CLI::home
+			puts START + "Please try again!" + GAP_LINE
+			CLI::advanced
 		elsif response[:status] == "error"
 			puts START_ERROR + response[:info] + "." + GAP_LINE
-			CLI::home
+			puts START + "Please try again!" + GAP_LINE
+			CLI::advanced
 		else
 			begin
 				raise CliError
@@ -143,11 +93,101 @@ module CLI
 		end
 
 		# following actions
-		CLI::handle_query(type: "advanced", preference: preference)
+		response[:type] = "advanced"
+		response[:preference] = preference
+		CLI::handle_query(response)
 	end
 
 	# member access only
 	def collection
+	end
+
+	def handle_query(response)
+
+		question =  START + "Here you go! What to do next?" + GAP_LINE
+
+		# surprise handler
+		if CLI::username == DEFAULT_USER && response[:type] == "surprise"
+			options = {
+				NEXT => {label: "NEXT", method: "surprise"},
+				HOME => {label: "HOME", method: "home"}
+			}
+		elsif response[:type] == "surprise"
+			options = {
+				NEXT => {label: "NEXT", method: "surprise"},
+				SAVE => {label: "SAVE", method: "save_activity", argument: response},
+				HOME => {label: "HOME", method: "home"}
+			}
+		# advanced handler
+		elsif CLI::username == DEFAULT_USER && response[:type] == "advanced"
+			options = {
+				NEXT => {label: "NEXT", method: "advanced", argument: response[:preference]},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"}
+			}
+		elsif response[:type] == "advanced"
+			options = {
+				NEXT => {label: "NEXT", method: "advanced", argument: response[:preference]},
+				SAVE => {label: "SAVE", method: "save_activity", argument: response},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"}
+			}
+		# collection handler
+		elsif CLI::username == DEFAULT_USER && type == "collection"
+			options = {
+				NEXT => {label: "NEXT", method: "advanced"},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"}
+			}
+		elsif type == "collection"
+			options = {
+				NEXT => {label: "NEXT", method: ""},
+				SAVE => {label: "SAVE", method: ""},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"}
+			}
+		else
+			begin
+				raise CliError
+			rescue CliError => error
+				puts error.invalid_argument
+			end
+		end
+
+		CLI::make_options(question: question, opt: options)
+	end
+
+	# member access only
+	# save activity into database
+	def save_activity(response)
+
+		# save function
+		# response[:info]
+		
+		question =  "The activity has been saved to your collection." + GAP_LINE
+
+		if response[:type] == "surprise"
+			options = {
+				NEXT => {label: "NEXT", method: "surprise"},
+				HOME => {label: "HOME", method: "home"},
+				"3" => {label: "COLLECTION", method: "collection"},
+			}
+		elsif response[:type] == "advanced"
+			options = {
+				NEXT => {label: "NEXT", method: "advanced", argument: response[:preference]},
+				RESET => {label: "RESET", method: "advanced"},
+				HOME => {label: "HOME", method: "home"},
+				"4" => {label: "COLLECTION", method: "collection"},
+			}
+		else
+			begin
+				raise CliError
+			rescue CliError => error
+				puts error.key_not_found
+			end
+		end
+
+		CLI::make_options(question: question, opt: options)
 	end
 
 	# print out activit table
@@ -161,8 +201,9 @@ module CLI
 			puts BORDER * col_max_length
 			puts VER + "#{e.capitalize}" + WHITE_SPACE * (col_max_length - e.size - 2) + VER + WHITE_SPACE + info["#{e}"].to_s.capitalize
 		end
+
 		puts BORDER * col_max_length + GAP_LINE
 	end
 
-	module_function :handle_query, :surprise, :advanced, :puts_activity
+	module_function :surprise, :advanced, :collection, :handle_query, :save_activity, :puts_activity
 end
