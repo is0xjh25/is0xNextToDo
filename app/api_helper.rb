@@ -12,7 +12,7 @@ module ApiHelper
 		
 		opts = ["type", "accessibility", "price", "participants"]
 		
-		if opts.include? opt
+		if opts.include?(opt)
 			url = URL + "?#{opt}=#{val}"
 		else
 			begin

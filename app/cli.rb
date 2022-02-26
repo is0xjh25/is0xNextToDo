@@ -22,6 +22,8 @@ module CLI
 	SAVE = "S"
 	NEXT = "N"
 	RESET = "R"
+	YES = "Y"
+	NO = "N"
 	MAX_INPUT_ATTEMPT = 10
 	MAX_LOGIN_ATTEMPT = 5
 	MAX_RESCUE_ATTEMPT = 5

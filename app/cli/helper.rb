@@ -29,7 +29,7 @@ module CLI
 		content_length = DIVIDER_LENGTH
 		line = ""
 
-		if [2, 3, 4].include? options.size
+		if [2, 3, 4].include?(options.size)
 			option_length = content_length / options.size
 			options.each do |key, info|
 				label = info[:label]
@@ -51,7 +51,7 @@ module CLI
 			puts line
 			puts HOR * DIVIDER_LENGTH
 			puts
-		elsif [6, 7, 8].include? options.size
+		elsif [6, 7, 8].include?(options.size)
 			split_options = options.dup
 			split_options_1 = {}
 			(options.size / 2).times do

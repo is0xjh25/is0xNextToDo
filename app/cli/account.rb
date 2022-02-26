@@ -33,7 +33,7 @@ module CLI
 			puts START + "Your username, please." + GAP_LINE
 		end
 
-		username = puts_long_promot
+		username = CLI::puts_long_promot
 		puts START + "And password. Don't worry, I won't tell anyone :)" + GAP_LINE
 		print "[#{CLI::username}]: "
 		password = STDIN.noecho(&:gets).chomp
@@ -70,11 +70,11 @@ module CLI
 		
 		# username
 		puts START + "Enter your new username." + GAP_LINE
-		username = puts_long_promot
+		username = CLI::puts_long_promot
 		while username == "asd" || username.downcase == DEFAULT_USER.downcase
 			puts START_WARNING + "The username has been used." + GAP_LINE
 			puts START + "Pick another one." + GAP_LINE
-			username = puts_long_promot
+			username = CLI::puts_long_promot
 		end
 
 		# email
@@ -82,7 +82,7 @@ module CLI
 		email_validate = false
 		while !email_validate
 			
-			email = puts_long_promot
+			email = CLI::puts_long_promot
 
 			if !CLI::valid_email?(email)
 				puts START_WARNING + "The email is not valid. Please check it again." + GAP_LINE
@@ -94,7 +94,7 @@ module CLI
 		while email == "asd@gmail.com"
 			puts START_WARNING + "The email has been used." + GAP_LINE
 			puts START + "Try another one." + GAP_LINE
-			email = puts_long_promot
+			email = CLI::puts_long_promot
 		end
 
 		# password
@@ -127,7 +127,7 @@ module CLI
 
 		puts START + "I'm listening."+ GAP_LINE
 		
-		input = puts_long_promot
+		input = CLI::puts_long_promot
 
 		if selected = "1" && input == "qwe"
 			puts START + "Found it!" + GAP_LINE
