@@ -10,7 +10,7 @@ module ApiHelper
 
 	def get_advanced(opt:, val:)
 		
-		opts = ["type", "accessibility", "price", "participant"]
+		opts = ["type", "accessibility", "price", "participants"]
 		
 		if opts.include? opt
 			url = URL + "?#{opt}=#{val}"
@@ -23,7 +23,7 @@ module ApiHelper
 			end
 		end
 
-		uri = URI.parse(url)
+		uri = URI.parse(url)		
 		return ApiHelper::get_response(uri)
 	end
 

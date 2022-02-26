@@ -19,13 +19,13 @@ module CLI
 		# advanced hanlder
 		elsif CLI::username == DEFAULT_USER && type == "advanced"
 			options = {
-				NEXT => {label: "NEXT", method: "advanced"},
+				NEXT => {label: "NEXT", method: "advanced", argument: preference},
 				RESET => {label: "RESET", method: "advanced"},
 				HOME => {label: "HOME", method: "home"}
 			}
 		elsif type == "advanced"
 			options = {
-				NEXT => {label: "NEXT", method: ""},
+				NEXT => {label: "NEXT", method: "advanced", argument: preference},
 				SAVE => {label: "SAVE", method: ""},
 				RESET => {label: "RESET", method: "advanced"},
 				HOME => {label: "HOME", method: "home"}
@@ -82,46 +82,50 @@ module CLI
 	end
 
 	# guest and member can access
-	def advanced
-		
-		categories = ["type", "participant", "accessibility", "price"]
-		puts CLI::make_title("Advanced") + GAP_LINE
-		question =  START + "Choose a filter." + GAP_LINE	
-		options = {
-			"1" => {label: categories[0].upcase, method: nil},
-			"2" => {label: categories[1].upcase, method: nil},
-			"3" => {label: "ACCESSLEVEL", method: nil},
-			"4" => {label: categories[3].upcase, method: nil},
-		}
-		filter = CLI::make_options(question: question, opt: options)
-		
-		if filter == "1"
-			types = ["education", "recreational", "social", "diy", "charity", "cooking", "relaxation", "music", "busywork"]
-			question = START + "Choose a type." + GAP_LINE	
+	def advanced(preference = nil)
+
+		if preference == nil
+			categories = ["type", "participants", "accessibility", "price"]
+			puts CLI::make_title("Advanced") + GAP_LINE
+			question =  START + "Choose a filter." + GAP_LINE	
 			options = {
-				"1" => {label: types[0].upcase, method: nil},
-				"2" => {label: "RECREATION", method: nil},
-				"3" => {label: types[2].upcase, method: nil},
-				"4" => {label: types[3].upcase, method: nil},
-				"5" => {label: types[4].upcase, method: nil},
-				"6" => {label: types[5].upcase, method: nil},
-				"7" => {label: types[6].upcase, method: nil},
-				"8" => {label: types[7].upcase, method: nil},
+				"1" => {label: categories[0].upcase, method: nil},
+				"2" => {label: "PARTICIPANT", method: nil},
+				"3" => {label: "ACCESSLEVEL", method: nil},
+				"4" => {label: categories[3].upcase, method: nil},
 			}
-			value = CLI::make_options(question: question, opt: options)
-			value = types[value.to_i]
-		elsif filter == "2"
-			puts "[is0]: Participants? (0->N)" + GAP_LINE
-			value  = puts_long_promot
-		elsif filter == "3"
-			puts "[is0]: Accessibility? (Easy->Hard = 0->1)" + GAP_LINE
-			value  = puts_long_promot
-		elsif filter == "4"
-			puts "[is0]: Price? (Free->Paid = 0->1)" + GAP_LINE
-			value  = puts_long_promot
+			filter = CLI::make_options(question: question, opt: options)
+			
+			if filter == "1"
+				types = ["education", "recreational", "social", "diy", "charity", "cooking", "relaxation", "music", "busywork"]
+				question = START + "Choose a type." + GAP_LINE	
+				options = {
+					"1" => {label: types[0].upcase, method: nil},
+					"2" => {label: "RECREATION", method: nil},
+					"3" => {label: types[2].upcase, method: nil},
+					"4" => {label: types[3].upcase, method: nil},
+					"5" => {label: types[4].upcase, method: nil},
+					"6" => {label: types[5].upcase, method: nil},
+					"7" => {label: types[6].upcase, method: nil},
+					"8" => {label: types[7].upcase, method: nil},
+				}
+				value = CLI::make_options(question: question, opt: options)
+				value = types[value.to_i-1]
+			elsif filter == "2"
+				puts "[is0]: Participants? (0->N)" + GAP_LINE
+				value  = puts_long_promot
+			elsif filter == "3"
+				puts "[is0]: Accessibility? (Easy->Hard = 0->1)" + GAP_LINE
+				value  = puts_long_promot
+			elsif filter == "4"
+				puts "[is0]: Price? (Free->Paid = 0->1)" + GAP_LINE
+				value  = puts_long_promot
+			end
+			
+			preference = {opt: categories[filter.to_i-1], val: value.to_s}
 		end
 
-		response = ApiHelper::get_advanced(opt: categories[filter.to_i], val:value.to_s)
+		response = ApiHelper::get_advanced(opt: preference[:opt], val:preference[:val])
 		if response[:status] == "success"
 			CLI::puts_activity(response[:info])
 		elsif response[:status] == "warning"
@@ -139,7 +143,7 @@ module CLI
 		end
 
 		# following actions
-		CLI::handle_query(type: "advanced", preference: nil)
+		CLI::handle_query(type: "advanced", preference: preference)
 	end
 
 	# member access only
