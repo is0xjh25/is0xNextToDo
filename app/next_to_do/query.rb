@@ -7,6 +7,8 @@ module NextToDo
 		
 		response = ApiHelper::get_random
 		if response[:status] == "success"
+			# update key's name
+			response[:info]["category"] = response[:info].delete("type")
 			puts_activity(response[:info])
 		elsif response[:status] == "warning"
 			puts START_WARNING + response[:info] + "." + GAP_LINE
@@ -36,7 +38,7 @@ module NextToDo
 		
 		if preference == nil
 			
-			categories = ["type", "participants", "accessibility", "price"]
+			categories = ["category", "participants", "accessibility", "price"]
 			question =  START + "Choose a filter." + GAP_LINE	
 			options = {
 				"1" => {label: categories[0].upcase, method: nil},
@@ -76,8 +78,10 @@ module NextToDo
 		end
 
 		response = ApiHelper::get_advanced(opt: preference[:opt], val:preference[:val])
+		puts make_title("New Activity") + GAP_LINE
 		if response[:status] == "success"
-			puts make_title("New Activity") + GAP_LINE
+			# update key's name
+			response[:info]["category"] = response[:info].delete("type")
 			puts_activity(response[:info])
 		elsif response[:status] == "warning"
 			puts START_WARNING + response[:info] + "." + GAP_LINE
@@ -103,12 +107,12 @@ module NextToDo
 	end
 
 	# member access only
-	def collection(sort={sorted: "participants", ordered: "aesc"})
+	def collection(ask={sorted: "participants", ordered: "asc"})
 
-		categories = ["type", "participants", "accessibility", "price"]
-		orders = ["aesc", "desc"]
+		categories = ["category", "participants", "accessibility", "price"]
+		orders = ["asc", "desc"]
 		
-		if sort == "reset"
+		if ask == "reset"
 			
 			question =  START + "Sorted by?" + GAP_LINE	
 			options = {
@@ -125,11 +129,12 @@ module NextToDo
 				"2" => {label: orders[1].upcase, method: nil},
 			}
 			ordered = make_options(question: question, opt: options)
-			
+
 			# Sorted order
-			collection({sorted: categories[sorted.to_i-1], ordered: orders[ordered.to_i-1]})
-		elsif categories.include?(sort[:sorted]) && orders.include?(sort[:ordered])
-			# info = get data from database(username, sorted)
+			ask = {sorted: categories[sorted.to_i-1], ordered: orders[ordered.to_i-1]}
+			collection(ask)
+		elsif categories.include?(ask[:sorted]) && orders.include?(ask[:ordered])
+			data = User.find_by(username: NextToDo::username).show_collection(sort: ask[:sorted], order: ask[:ordered])
 		else
 			begin
 				raise NextToDoError
@@ -139,24 +144,28 @@ module NextToDo
 			end
 		end
 
-		### example
-		data = [
-			{"activity"=>"Learn Morse code", "type"=>"education", "participants"=>1, "price"=>0, "link"=>"https://en.wikipedia.org/wiki/Morse_code", "key"=>"3646173", "accessibility"=>0},
-			{"activity"=>"Learn Morse code", "type"=>"education", "participants"=>1, "price"=>0, "link"=>"https://en.wikipedia.org/wiki/Morse_code", "key"=>"3646173", "accessibility"=>0},
-		] 
-
-		puts make_title(username + "'s" + WHITE_SPACE + "Collection") + GAP_LINE
+		puts make_title(NextToDo::username.capitalize + "'s" + WHITE_SPACE + "Collection") + GAP_LINE
 		puts_collection(data)
 
-		options = {
-			"1" => {label: "RANDOM", method: nil},
-			"2" => {label: "PICK", method: nil},
-			"3" => {label: "SORTED BY", method: "collection", argument: "reset"},
-			HOME => {label: "HOME", method: "home"},
-		}
-		action = make_options(question: nil, opt: options)
+		if data.empty?
+			options = {
+				"1" => {label: "SURPRISE", method: "surprise"},
+				"2" => {label: "ADVANCED", method: "advanced"},
+				MENU => {label: "MENU", method: "menu"}
+			}
+			action = make_options(question: nil, opt: options)
+		else
+			options = {
+				"1" => {label: "RANDOM", method: nil},
+				"2" => {label: "PICK", method: nil},
+				"3" => {label: "SORTED BY", method: "collection", argument: "reset"},
+				HOME => {label: "HOME", method: "home"},
+			}
+			action = make_options(question: nil, opt: options)
+		end
 
-		# RANDOM
+
+		# random
 		if action == "1"
 			# following actions
 			info = data[rand(data.size).to_i]
@@ -164,7 +173,7 @@ module NextToDo
 			puts make_title("Saved Activity") + GAP_LINE
 			puts_activity(info)
 			handle_query(response)
-		# PICK
+		# pick
 		elsif action == "2"
 
 			attempt = 0
@@ -248,7 +257,7 @@ module NextToDo
 	def save_activity(response)
 
 		### save function
-		Activity.save_activity(username: NextToDo::username, info: response[:info])
+		User.find_by(username: NextToDo::username).collection_save(info: response[:info])
 		
 		question =  START + "The activity has been saved to your collection." + GAP_LINE
 
@@ -292,7 +301,7 @@ module NextToDo
 			puts_activity(response[:info])
 			handle_query(response)
 		elsif confirm == YES
-			### remove by (username, response[:key])
+			User.find_by(username: NextToDo::username).collection_remove(info: response[:info])
 			puts START + "The activity has been removed" + GAP_LINE
 			collection
 		end
@@ -300,8 +309,10 @@ module NextToDo
 
 	# print out activity table
 	def puts_activity(info)
+
+		info = info.transform_keys(&:to_s)
 		# main categories
-		col_name = ["activity", "type", "participants", "accessibility", "price"]
+		col_name = ["activity", "category", "participants", "accessibility", "price"]
 		col_max_length = col_name.max_by(&:length).size + 2
 
 		col_name.each do |e|
@@ -314,13 +325,13 @@ module NextToDo
 
 	# print out collection table
 	def puts_collection(data)
-				
+		
 		puts BORDER * DIVIDER_LENGTH
 		puts VER + WHITE_SPACE + "#" + WHITE_SPACE + VER + WHITE_SPACE + "Activity" + WHITE_SPACE * (DIVIDER_LENGTH - 15) + VER
 
 		data.each_with_index do |v, i|
 			puts BORDER * DIVIDER_LENGTH
-			puts VER + WHITE_SPACE * (3 - (i+1).to_s.size) + (i+1).to_s + VER + WHITE_SPACE + v["activity"] + WHITE_SPACE * (DIVIDER_LENGTH - v["activity"].size - 7) + VER
+			puts VER + WHITE_SPACE * (3 - (i+1).to_s.size) + (i+1).to_s + VER + WHITE_SPACE + v[:activity] + WHITE_SPACE * (DIVIDER_LENGTH - v[:activity].size - 7) + VER
 		end
 
 		puts BORDER * DIVIDER_LENGTH

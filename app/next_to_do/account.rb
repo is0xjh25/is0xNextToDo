@@ -106,7 +106,7 @@ module NextToDo
 		puts START + "Here is your account information." + GAP_LINE
 		# display account info
 		puts_account(account)
-		puts START + "Thank you for join is0xNextToDo." + GAP_LINE
+		puts START + "Thank you for joining is0xNextToDo." + GAP_LINE
 		
 		# set user
 		NextToDo::username = username 
