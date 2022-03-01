@@ -55,8 +55,8 @@ module NextToDo
 			options = {
 				"1" => {label: "TRY AGAIN", method: "member"},
 				"2" => {label: "RESCUE", method: "rescue"},
-				"3" => {label: "BE GUEST", method: "home"},
-				MENU => {label: "MENU", method: "menu"}
+				"3" => {label: "CREATE ONE", method: "create_account"},
+				"4" => {label: "BE GUEST", method: "home"},
 			}
 			make_options(question: question, opt: options)
 		end

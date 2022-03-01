@@ -248,8 +248,8 @@ module NextToDo
 	def save_activity(response)
 
 		### save function
-		### response[:info]
-
+		Activity.save_activity(username: NextToDo::username, info: response[:info])
+		
 		question =  START + "The activity has been saved to your collection." + GAP_LINE
 
 		if response[:type] == "surprise"

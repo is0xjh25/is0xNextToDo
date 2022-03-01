@@ -3,4 +3,10 @@
 require_relative '../config/environment.rb'
 
 # User.create_account(username: "jim", password: "1234", email: "jim@gmail.com")
-puts User.users_info.each {|user| user}
+
+puts User.users_info.each {|u| u}
+puts "--------"
+puts Activity.activities_info.each {|a| a}
+puts "--------"
+Activity.first.user = User.first
+puts Activity.first.user
