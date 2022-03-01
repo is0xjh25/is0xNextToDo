@@ -42,6 +42,7 @@ module NextToDo
 						raise NextToDoError
 					rescue NextToDoError => error
 						puts error.option_too_long
+						home
 					end
 				end  
 			end
@@ -65,6 +66,7 @@ module NextToDo
 				raise NextToDoError
 			rescue NextToDoError => error
 				puts error.options_overload
+				home
 			end
 		end
 	end
@@ -103,14 +105,14 @@ module NextToDo
 	end
 
 	def puts_short_promot
-		print "[#{NextToDo::username}]: "
+		print "[#{NextToDo::username.capitalize}]: "
 		input = get_char.upcase
 		print input + GAP_LINE
 		return input
 	end
 
 	def puts_long_promot
-		print "[#{NextToDo::username}]: "
+		print "[#{NextToDo::username.capitalize}]: "
 		input = gets.strip.downcase
 		puts
 		return input

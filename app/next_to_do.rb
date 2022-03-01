@@ -119,5 +119,9 @@ module NextToDo
 		def key_not_found
 			puts START_ERROR + "The key cannot be found in the hash."
 		end
+
+		def create_account_failed
+			puts START_ERROR + "The account cannot be created."
+		end
 	end
 end

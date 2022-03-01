@@ -19,9 +19,9 @@ module NextToDo
 	# guest and member can access
 	def member
 		
-		if !login_failed
+		if !NextToDo::login_failed && NextToDo::login_attempt == 0
 			puts START + "Great! Tell me your username." + GAP_LINE
-		elsif login_failed && login_attempt > MAX_LOGIN_ATTEMPT
+		elsif NextToDo::login_failed && NextToDo::login_attempt > MAX_LOGIN_ATTEMPT
 			begin
 				raise NextToDoError
 			rescue NextToDoError => error
@@ -40,14 +40,14 @@ module NextToDo
 		puts GAP_LINE
 
 		# success or fail
-		if username == "asd" && password == "asd"
-			NextToDo::username = "Yun-Chi"
-			login_failed = false
-			login_attempt = 0
+		if User.login?(username: username, password: password)
+			NextToDo::username = username
+			NextToDo::login_failed = false
+			NextToDo::login_attempt = 0
 			home
 		else
-			login_failed = true
-			login_attempt += 1
+			NextToDo::login_failed = true
+			NextToDo::login_attempt += 1
 			puts START_WARNING + "The email or password is incorrect." + GAP_LINE
 			puts START + "Calm down buddy. I will help you out." + GAP_LINE
 			# options
@@ -71,7 +71,7 @@ module NextToDo
 		# username
 		puts START + "Enter your new username." + GAP_LINE
 		username = puts_long_promot
-		while username == "asd" || username.downcase == DEFAULT_USER.downcase
+		while User.exists?(username) || username.downcase == DEFAULT_USER.downcase
 			puts START_WARNING + "The username has been used." + GAP_LINE
 			puts START + "Pick another one." + GAP_LINE
 			username = puts_long_promot
@@ -80,10 +80,9 @@ module NextToDo
 		# email
 		puts START + "Enter your email." + GAP_LINE
 		email_validate = false
-		while !email_validate
-			
-			email = puts_long_promot
 
+		while !email_validate
+			email = puts_long_promot
 			if !valid_email?(email)
 				puts START_WARNING + "The email is not valid. Please check it again." + GAP_LINE
 			else
@@ -91,7 +90,7 @@ module NextToDo
 			end
 		end
 
-		while email == "asd@gmail.com"
+		while User.exists?(email)
 			puts START_WARNING + "The email has been used." + GAP_LINE
 			puts START + "Try another one." + GAP_LINE
 			email = puts_long_promot
@@ -101,10 +100,12 @@ module NextToDo
 		password = set_password
 
 		# create account
+		account = {username: username, password: password, email: email}
+		User.create_account(account)
 		puts START + "Your account has been created." + GAP_LINE
 		puts START + "Here is your account information." + GAP_LINE
 		# display account info
-		puts_account
+		puts_account(account)
 		puts START + "Thank you for join is0xNextToDo." + GAP_LINE
 		
 		# set user
@@ -123,16 +124,24 @@ module NextToDo
 			"1" => {label: "USERNAME", method: nil},
 			"2" => {label: "EMAIL", method: nil},
 		}
-		selected = make_options(q: question, opt: options)
+		selected = make_options(question: question, opt: options)
 
 		puts START + "I'm listening."+ GAP_LINE
 		
 		input = puts_long_promot
 
-		if selected = "1" && input == "qwe"
+		if (selected == "1" && User.exists?(username: input)) || (selected == "2" && User.exists?(email: input))
+			
+			if selected == "1"
+				username = input
+			elsif selected == "2"
+				username = User.find_by(email: input).username
+			end
+
+			NextToDo::login_failed = false
+			NextToDo::login_attempt = 0
+
 			puts START + "Found it!" + GAP_LINE
-			puts START + "Here is your account information." + GAP_LINE
-			puts START + "Don't lose it :)" + GAP_LINE
 			question = START + "Want to reset password?." + GAP_LINE
 			options = {
 				"1" => {label: "LET'S GO", method: nil},
@@ -142,21 +151,22 @@ module NextToDo
 			
 			if selected_1 == "1"
 				password = set_password
-				#update password
+				# update password
+				User.update_password(username: username, password: password)
 				puts START + "Your password has been update." + GAP_LINE
 				puts START + "Here is your account information." + GAP_LINE
 				# display account info
-				puts_account
+				puts_account(User.find_by(username: username).info)
 				login
 			elsif selected_1 == "2"
 				puts START + "Here is your account information." + GAP_LINE
 				# display account info
-				puts_account
+				puts_account(User.find_by(username: username).info)
 				# set user
 				NextToDo::username = username
 				home
 			end
-		elsif rescue_attempt > MAX_RESCUE_ATTEMPT
+		elsif NextToDo::rescue_attempt > MAX_RESCUE_ATTEMPT
 			begin
 				raise NextToDoError
 			rescue NextToDoError => error
@@ -164,7 +174,7 @@ module NextToDo
 				quit
 			end
 		else
-			rescue_attempt += 1
+			NextToDo::rescue_attempt += 1
 			puts START + "Sorry, I don't see you in the database" + GAP_LINE
 			question = START + "Should we move on?" + GAP_LINE
 			options = {
@@ -181,11 +191,11 @@ module NextToDo
 		puts START + "Make a password." + GAP_LINE
 		password_validate = false
 		while !password_validate
-			print "[#{NextToDo::username}]: "
+			print "[#{NextToDo::username.capitalize}]: "
 			password = STDIN.noecho(&:gets).chomp
 			puts GAP_LINE
 			puts START + "Enter your password again." + GAP_LINE
-			print "[#{NextToDo::username}]: "
+			print "[#{NextToDo::username.capitalize}]: "
 			password_1 = STDIN.noecho(&:gets).chomp
 			puts GAP_LINE
 			
@@ -203,13 +213,7 @@ module NextToDo
 	end
 
 	# print out account information table
-	def puts_account()
-		# example
-		info = {
-			"username": "is0xjh25",
-			"password": "12345678",
-			"email": "qyf@gmail.com",
-		}
+	def puts_account(info)
 
 		col_name = ["username", "password", "email"]
 		col_max_length = col_name.max_by(&:length).size + 2
@@ -218,6 +222,7 @@ module NextToDo
 			puts BORDER * col_max_length
 			puts VER + "#{e.capitalize}" + WHITE_SPACE * (col_max_length - e.size - 2) + VER + WHITE_SPACE + info[:"#{e}"]
 		end
+
 		puts BORDER * col_max_length + GAP_LINE
 	end
 	

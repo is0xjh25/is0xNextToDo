@@ -31,7 +31,7 @@ module NextToDo
 	# guest and member can access
 	def home
 		
-		puts make_title("Home" + WHITE_SPACE + "(#{NextToDo::username})") + GAP_LINE
+		puts make_title("Home" + WHITE_SPACE + "(#{NextToDo::username.capitalize})") + GAP_LINE
 		if NextToDo::username.downcase == DEFAULT_USER.downcase
 			# options
 			question = START + "Welcome my guest! How can I help you?" + GAP_LINE
@@ -41,7 +41,7 @@ module NextToDo
 				MENU => {label: "MENU", method: "menu"}
 			}
 		else
-			question = START + "It's you #{NextToDo::username}! How can I help you?" + GAP_LINE
+			question = START + "Hey #{NextToDo::username.capitalize}! How can I help you?" + GAP_LINE
 			options = {
 				"1" => {label: "SURPRISE", method: "surprise"},
 				"2" => {label: "ADVANCED", method: "advanced"},
@@ -54,28 +54,16 @@ module NextToDo
 
 	# guest and member can access
 	def quit
-		
-		question = START + "Are you sure want to leave us?" + GAP_LINE
-		options = {
-			NO => {label: "NO", method: nil},
-			YES => {label: "YES", method: nil},
-		}
-		confirm = make_options(question: question, opt: options)
+		puts make_title("See You Next Time")
+		puts GAP_LINE
+		puts File.readlines('./resources/favicon.txt')
+		puts
+		puts File.readlines('./resources/bye.txt') 
+		puts GAP_LINE
+		print COPY_RIGHT
 
-		if confirm == NO
-			menu
-		elsif confirm == YES
-			puts make_title("See You Next Time")
-			puts GAP_LINE
-			puts File.readlines('./resources/favicon.txt')
-			puts
-			puts File.readlines('./resources/bye.txt') 
-			puts GAP_LINE
-			print COPY_RIGHT
-	
-			input = get_char
-			exit
-		end
+		input = get_char
+		exit
 	end
 
 	module_function :setup, :start, :menu, :quit, :home

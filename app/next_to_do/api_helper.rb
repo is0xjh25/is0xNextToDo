@@ -19,7 +19,7 @@ module ApiHelper
 				raise NextToDoError
 			rescue NextToDoError => error
 				puts error.invalid_argument
-				NextToDo::quit
+				NextToDo::home
 			end
 		end
 

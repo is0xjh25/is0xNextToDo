@@ -19,6 +19,7 @@ module NextToDo
 				raise NextToDoError
 			rescue NextToDoError => error
 				puts error.key_not_found
+				home
 			end
 		end
 
@@ -91,6 +92,7 @@ module NextToDo
 				raise NextToDoError
 			rescue NextToDoError => error
 				puts error.key_not_found
+				home
 			end
 		end
 
@@ -133,6 +135,7 @@ module NextToDo
 				raise NextToDoError
 			rescue NextToDoError => error
 				puts error.key_not_found
+				home
 			end
 		end
 
@@ -233,6 +236,7 @@ module NextToDo
 				raise NextToDoError
 			rescue NextToDoError => error
 				puts error.invalid_argument
+				home
 			end
 		end
 
@@ -266,6 +270,7 @@ module NextToDo
 				raise NextToDoError
 			rescue NextToDoError => error
 				puts error.key_not_found
+				home
 			end
 		end
 
