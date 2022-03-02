@@ -9,4 +9,4 @@ puts "--------"
 puts Activity.all_info.each {|a| a}
 puts "--------"
 puts ActivityUser.first.inspect
-puts ActivityUser.second.inspect
+puts User.find_by(username: "123").blank?

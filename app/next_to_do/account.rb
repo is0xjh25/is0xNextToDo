@@ -71,8 +71,12 @@ module NextToDo
 		# username
 		puts START + "Enter your new username." + GAP_LINE
 		username = puts_long_promot
-		while User.exists?(username) || username.downcase == DEFAULT_USER.downcase
-			puts START_WARNING + "The username has been used." + GAP_LINE
+		while !User.find_by(username: username).blank? || username.downcase == DEFAULT_USER.downcase || username = ""
+			if username == ""
+				puts START_WARNING + "The username cannot be empty." + GAP_LINE
+			else
+				puts START_WARNING + "The username has been used." + GAP_LINE
+			end
 			puts START + "Pick another one." + GAP_LINE
 			username = puts_long_promot
 		end
@@ -90,7 +94,7 @@ module NextToDo
 			end
 		end
 
-		while User.exists?(email)
+		while !User.find_by(email: email).blank?
 			puts START_WARNING + "The email has been used." + GAP_LINE
 			puts START + "Try another one." + GAP_LINE
 			email = puts_long_promot
