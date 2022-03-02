@@ -5,7 +5,7 @@
 * [Getting Started](#getting-started)
 * [Usage](#usage)
 * [Demo](#demo)
-* [Support](#support)
+* [Developed by and Support](#developed-by-and-support)
 
 ## About the Project
 _is0xNextToDo_ is a **Command Line Applications** for finding a cool activity when the users are bored. It's not only support random searching, but it also possesses the filter functionality which can search by category, participant, accessibility, and price. Moreover, you can have a collection for saving your loved activities by creating your owned personal account.
@@ -80,10 +80,9 @@ _is0xNextToDo_ is a **Command Line Applications** for finding a cool activity wh
   <img alt="Unsave Activity" src="demo/unsave-activity.gif" width="500" >
 </p>
 
-
-
-## Support
-The activity list is provided by _[Bored API](https://www.boredapi.com/about)_.
+## Developed by and Support
+- The application is developed by _[is0xjh25 (Yun-Chi Hsiao)](https://is0xjh25.github.io)_
+- The activity list is provided by _[Bored API](https://www.boredapi.com/about)_
 <br/>
 <p align="left">
   <img alt="Favicon" src="./favicon_io.png" width="250" >
