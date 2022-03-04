@@ -33,11 +33,11 @@ module NextToDo
 
 	# guest and member can access
 	def advanced(preference=nil)
-	
-		puts make_title("Advanced") + GAP_LINE
-		
+			
 		if preference == nil
 			
+			puts make_title("Advanced") + GAP_LINE
+
 			categories = ["category", "participants", "accessibility", "price"]
 			question =  START + "Choose a filter." + GAP_LINE	
 			options = {

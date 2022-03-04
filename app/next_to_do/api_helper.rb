@@ -10,7 +10,11 @@ module ApiHelper
 
 	def get_advanced(opt:, val:)
 		
-		opts = ["category", "accessibility", "price", "participants"]
+		if opt == "category"
+			opt = "type"
+		end
+		
+		opts = ["type", "accessibility", "price", "participants"]
 		
 		if opts.include?(opt)
 			url = URL + "?#{opt}=#{val}"
