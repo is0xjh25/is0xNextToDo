@@ -71,7 +71,7 @@ module NextToDo
 		# username
 		puts START + "Enter your new username." + GAP_LINE
 		username = puts_long_promot
-		while !User.find_by(username: username).blank? || username.downcase == DEFAULT_USER.downcase || username = ""
+		while !User.find_by(username: username).blank? || username.downcase == DEFAULT_USER.downcase || username == ""
 			if username == ""
 				puts START_WARNING + "The username cannot be empty." + GAP_LINE
 			else
