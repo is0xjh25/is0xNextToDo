@@ -5,7 +5,7 @@
 * [Getting Started](#getting-started)
 * [Usage](#usage)
 * [Demo](#demo)
-* [Developed by and Support](#developed-by-and-support)
+* [Developed By and Support](#developed-by-and-support)
 
 ## About the Project
 _is0xNextToDo_ is a **Command Line Applications** for finding a cool activity when the users are bored. It's not only support random searching, but it also possesses the filter functionality which can search by category, participant, accessibility, and price. Moreover, you can have a collection for saving your loved activities by creating your owned personal account.
@@ -21,23 +21,23 @@ _is0xNextToDo_ is a **Command Line Applications** for finding a cool activity wh
   > Type in terminal: `ruby bin/run`
   
 ## Usage
-- Account
-  - **Login**: Login an existing account
-  - **Create Account**: Create a new account by username, password and email
-  - **Recovery Account**: Type in a username or email to recovery the user's account
-  - **Update Password**: Change the password
+- **Account**
+  - ***Login***: Login an existing account
+  - ***Create Account***: Create a new account by username, password and email
+  - ***Recovery Account***: Type in a username or email to recovery the user's account
+  - ***Update Password***: Change the password
 
-- Activity
-  - **View Activity**: Provide the information of the selected activity in a table
-  - **Surprise:**: Find a random activity
-  - **Advacned**: Find an activity by filter
-  - **Save Activity**: Save the activity into the collection.
-  - **Unsave Activity**: Remove the activity from the collection
+- **Activity**
+  - ***View Activity***: Provide the information of the selected activity in a table
+  - ***Surprise:***: Find a random activity
+  - ***Advacned***: Find an activity by filter
+  - ***Save Activity***: Save the activity into the collection.
+  - ***Unsave Activity***: Remove the activity from the collection
 
-- Collection
-  - **Random**: Pick a random activity from the collection
-  - **Pick**: Choose an activity from the collection 
-  - **Sorted By**: Sort out the collection by category, participant, accessibility, and price
+- **Collection**
+  - ***Random***: Pick a random activity from the collection
+  - ***Pick***: Choose an activity from the collection 
+  - ***Sorted By***: Sort out the collection by category, participant, accessibility, and price
 
 ## Demo
 - **Main Page**
@@ -80,7 +80,7 @@ _is0xNextToDo_ is a **Command Line Applications** for finding a cool activity wh
   <img alt="Unsave Activity" src="demo/unsave-activity.gif" width="500" >
 </p>
 
-## Developed by and Support
+## Developed By and Support
 - The application is developed by _[is0xjh25 (Yun-Chi Hsiao)](https://is0xjh25.github.io)_
 - The activity list is provided by _[Bored API](https://www.boredapi.com/about)_
 <br/>
